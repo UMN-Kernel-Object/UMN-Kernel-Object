@@ -17,7 +17,7 @@
     <script src="_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Group Participants" href="participants.html" />
+    <link rel="next" title="Group Participants" href="UKO/members.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -36,10 +36,45 @@
             
   <section id="umn-kernel-dev-documentation">
 <h1>UMN Kernel Dev Documentation<a class="headerlink" href="#umn-kernel-dev-documentation" title="Permalink to this heading">¶</a></h1>
-<p>Welcome to the documentation site for UMN’s Kernel Study Group.</p>
+<p>Welcome to the documentation site for the UMN Kernel Object group.</p>
 <div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="participants.html">Group Participants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UKO/members.html">Group Participants</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="UKO/members.html#students">Students</a></li>
+<li class="toctree-l2"><a class="reference internal" href="UKO/members.html#advisors">Advisors</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="maize/vm-kernel-install.html">Kernel Install in VM</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="maize/vm-kernel-install.html#synopsis">Synopsis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="maize/vm-kernel-install.html#tutorial-steps">Tutorial Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="maize/vm-kernel-install.html#advantages">Advantages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="maize/vm-kernel-install.html#caveats">Caveats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="maize/vm-kernel-install.html#alternatives">Alternatives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="maize/vm-kernel-install.html#qemu-resources">QEMU Resources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="maize/vm-kernel-install.html#ideas-for-future-discussion">Ideas for Future Discussion</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rust/hello_world_module.html">Creating a Hello World Kernel Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rust/hello_world_module.html#synopsis">Synopsis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rust/hello_world_module.html#preliminaries">Preliminaries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rust/hello_world_module.html#obtaining-the-source-code">Obtaining the Source Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rust/hello_world_module.html#walking-through-the-source-code">Walking Through the Source Code</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rust/hello_world_module.html#hello-world-c">hello_world.c</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rust/hello_world_module.html#makefile">Makefile</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rust/hello_world_module.html#kernel-configuration">Kernel Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rust/hello_world_module.html#kernel-installation">Kernel Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rust/hello_world_module.html#booting-the-new-kernel">Booting the New Kernel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rust/hello_world_module.html#recovering-from-a-broken-kernel">Recovering from a Broken Kernel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rust/hello_world_module.html#loading-a-buggy-kernel-module">Loading a Buggy Kernel Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rust/hello_world_module.html#future-goal-kernel-build-script">Future Goal: Kernel Build Script</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rust/rust.html">Rust Subgroup Intro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sched/sched.html">Schedulers Subgroup Intro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="virtmem/virtmem.html">Virtual Memory Subgroup Intro</a></li>
 </ul>
 </div>
 </section>
@@ -61,15 +96,21 @@
 
 
 <h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="participants.html">Group Participants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UKO/members.html">Group Participants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="maize/vm-kernel-install.html">Kernel Install in VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rust/hello_world_module.html">Creating a Hello World Kernel Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rust/rust.html">Rust Subgroup Intro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sched/sched.html">Schedulers Subgroup Intro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="virtmem/virtmem.html">Virtual Memory Subgroup Intro</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="#">Documentation overview</a><ul>
-      <li>Next: <a href="participants.html" title="next chapter">Group Participants</a></li>
+      <li>Next: <a href="UKO/members.html" title="next chapter">Group Participants</a></li>
   </ul></li>
 </ul>
 </div>
