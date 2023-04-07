@@ -1,44 +1,90 @@
-
 <!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-
-    <title>Creating a Hello World Kernel Module &#8212; UMN Kernel Dev  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Creating a Hello World Kernel Module &mdash; UMN Kernel Dev  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Rust Subgroup Intro" href="rust.html" />
-    <link rel="prev" title="Kernel Install in VM" href="../maize/vm-kernel-install.html" />
-   
-  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+    <link rel="prev" title="Kernel Install in VM" href="../maize/vm-kernel-install.html" /> 
+</head>
 
-  </head><body>
-  
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
           
+          
+          <a href="../index.html" class="icon icon-home">
+            UMN Kernel Dev
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../UKO/members.html">Group Participants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maize/setup.html">Maize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maize/vm-kernel-install.html">Kernel Install in VM</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Creating a Hello World Kernel Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rust.html">Rust Subgroup Intro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sched/extern.html">External Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sched/lsp.html">Language Server Protocol</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sched/sched.html">Schedulers Subgroup Intro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sched/xv6.html">xv6 Operating System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../virtmem/virtmem.html">Virtual Memory Subgroup Intro</a></li>
+</ul>
 
-          <div class="body" role="main">
-            
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">UMN Kernel Dev</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Creating a Hello World Kernel Module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/rust/hello_world_module.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
   <section id="creating-a-hello-world-kernel-module">
-<h1>Creating a Hello World Kernel Module<a class="headerlink" href="#creating-a-hello-world-kernel-module" title="Permalink to this heading">¶</a></h1>
+<h1>Creating a Hello World Kernel Module<a class="headerlink" href="#creating-a-hello-world-kernel-module" title="Permalink to this heading"></a></h1>
 <section id="synopsis">
-<h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this heading">¶</a></h2>
+<h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this heading"></a></h2>
 <p>These steps outline how to modify the kernel source tree to include a new
 “Hello, World!” kernel module. This module only performs the trivial task of
 printing messages to the console  when it is loaded or removed. However, it
@@ -46,14 +92,14 @@ still serves as a useful illustration of how kernel modules are generally
 structured and how to integrate a new module into the existing kernel codebase.</p>
 </section>
 <section id="preliminaries">
-<h2>Preliminaries<a class="headerlink" href="#preliminaries" title="Permalink to this heading">¶</a></h2>
+<h2>Preliminaries<a class="headerlink" href="#preliminaries" title="Permalink to this heading"></a></h2>
 <p>This tutorial assumes you already have a working virtual machine set up on our
 <code class="docutils literal notranslate"><span class="pre">maize</span></code> server and that you are able to boot a kernel you have compiled
 yourself on that VM. See our earlier tutorial on installing a custom kernel in a
 VM if you have not already completed these tasks.</p>
 </section>
 <section id="obtaining-the-source-code">
-<h2>Obtaining the Source Code<a class="headerlink" href="#obtaining-the-source-code" title="Permalink to this heading">¶</a></h2>
+<h2>Obtaining the Source Code<a class="headerlink" href="#obtaining-the-source-code" title="Permalink to this heading"></a></h2>
 <p>First, you will need to obtain the source code for our simple kernel module.
 You should already have cloned a copy of the Linux kernel source tree from a
 previous tutorial, i.e., you should see something like the following:</p>
@@ -88,7 +134,7 @@ master
 </div>
 </section>
 <section id="walking-through-the-source-code">
-<h2>Walking Through the Source Code<a class="headerlink" href="#walking-through-the-source-code" title="Permalink to this heading">¶</a></h2>
+<h2>Walking Through the Source Code<a class="headerlink" href="#walking-through-the-source-code" title="Permalink to this heading"></a></h2>
 <p>This branch includes a few changes to the upstream Linux kernel source. In
 short, it adds a new kernel module whose sole purpose is to print the string
 <code class="docutils literal notranslate"><span class="pre">Hello,</span> <span class="pre">World!</span></code> when the module is loaded and to print the string <code class="docutils literal notranslate"><span class="pre">Goodbye,</span>
@@ -104,7 +150,7 @@ device driver.</p>
 to this directory and browse its files with the editor of your choice. A few
 items of note are summarized below.</p>
 <section id="hello-world-c">
-<h3>hello_world.c<a class="headerlink" href="#hello-world-c" title="Permalink to this heading">¶</a></h3>
+<h3>hello_world.c<a class="headerlink" href="#hello-world-c" title="Permalink to this heading"></a></h3>
 <ul class="simple">
 <li><p>The functions <code class="docutils literal notranslate"><span class="pre">hello_world_init</span></code> and <code class="docutils literal notranslate"><span class="pre">hello_world_exit</span></code> will be called
 when this kernel module is loaded and removed, respectively.</p></li>
@@ -117,7 +163,7 @@ module in the kernel codebase.</p></li>
 </ul>
 </section>
 <section id="makefile">
-<h3>Makefile<a class="headerlink" href="#makefile" title="Permalink to this heading">¶</a></h3>
+<h3>Makefile<a class="headerlink" href="#makefile" title="Permalink to this heading"></a></h3>
 <ul class="simple">
 <li><p>The <code class="docutils literal notranslate"><span class="pre">SPDX-License-Identifier</span></code> (also included in the C source) specifies the
 license for this code. It is a useful shorthand that is used in place of
@@ -130,7 +176,7 @@ configuration system (discussed below).</p></li>
 </section>
 </section>
 <section id="kernel-configuration">
-<h2>Kernel Configuration<a class="headerlink" href="#kernel-configuration" title="Permalink to this heading">¶</a></h2>
+<h2>Kernel Configuration<a class="headerlink" href="#kernel-configuration" title="Permalink to this heading"></a></h2>
 <p>The remaining changes in the <code class="docutils literal notranslate"><span class="pre">hello_world_module</span></code> branch allow our new kernel
 module to be integrated with the kernel configuration system. You may remember
 that when you built your first kernel, you had to generate a configuration
@@ -170,7 +216,7 @@ benefit from our server’s multiple cores.</p>
 built kernel. Type in <code class="docutils literal notranslate"><span class="pre">n</span></code> for all of these prompts.</p>
 </section>
 <section id="kernel-installation">
-<h2>Kernel Installation<a class="headerlink" href="#kernel-installation" title="Permalink to this heading">¶</a></h2>
+<h2>Kernel Installation<a class="headerlink" href="#kernel-installation" title="Permalink to this heading"></a></h2>
 <p>You are now ready to install your new custom kernel on your virtual machine.
 This was covered in detail in a previous tutorial, and you should follow the
 instructions there.</p>
@@ -192,7 +238,7 @@ your VM:</p>
 </ol>
 </section>
 <section id="booting-the-new-kernel">
-<h2>Booting the New Kernel<a class="headerlink" href="#booting-the-new-kernel" title="Permalink to this heading">¶</a></h2>
+<h2>Booting the New Kernel<a class="headerlink" href="#booting-the-new-kernel" title="Permalink to this heading"></a></h2>
 <p>At this point, you likely have several kernel versions installed on your VM. You
 will most likely see the following versions reflected in <code class="docutils literal notranslate"><span class="pre">/boot</span></code> and on the
 GRUB menu when your VM starts up. They likely look something like the following:</p>
@@ -230,7 +276,7 @@ etc.
 </div>
 </section>
 <section id="recovering-from-a-broken-kernel">
-<h2>Recovering from a Broken Kernel<a class="headerlink" href="#recovering-from-a-broken-kernel" title="Permalink to this heading">¶</a></h2>
+<h2>Recovering from a Broken Kernel<a class="headerlink" href="#recovering-from-a-broken-kernel" title="Permalink to this heading"></a></h2>
 <p>One you actually start hacking on kernel code, you are likely to introduce bugs
 that may cause a kernel panic, where your VM fails to boot at all. This is
 precisely why we are working within virtual machines rather than directly on a
@@ -280,7 +326,7 @@ kernel, we can use the following command:</p>
 </div>
 </section>
 <section id="loading-a-buggy-kernel-module">
-<h2>Loading a Buggy Kernel Module<a class="headerlink" href="#loading-a-buggy-kernel-module" title="Permalink to this heading">¶</a></h2>
+<h2>Loading a Buggy Kernel Module<a class="headerlink" href="#loading-a-buggy-kernel-module" title="Permalink to this heading"></a></h2>
 <p>Change the line for the hello world kernel module in your <code class="docutils literal notranslate"><span class="pre">.config</span></code> file from</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">CONFIG_HELLO_WORLD</span><span class="o">=</span>y
 </pre></div>
@@ -305,7 +351,7 @@ instruct the kernel to load our module:</p>
 initialization logic, the system itself stays up and running.</p>
 </section>
 <section id="future-goal-kernel-build-script">
-<h2>Future Goal: Kernel Build Script<a class="headerlink" href="#future-goal-kernel-build-script" title="Permalink to this heading">¶</a></h2>
+<h2>Future Goal: Kernel Build Script<a class="headerlink" href="#future-goal-kernel-build-script" title="Permalink to this heading"></a></h2>
 <p>Eventually, we should aim to have a script that takes care of the tedium around
 building and installing a new kernel (compiling, mounting the guest VM’s file
 system, etc.). One important part of this script will likely be generating a
@@ -320,81 +366,34 @@ valuable contribution to the group!</p>
 </section>
 
 
+           </div>
           </div>
-          
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../maize/vm-kernel-install.html" class="btn btn-neutral float-left" title="Kernel Install in VM" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rust.html" class="btn btn-neutral float-right" title="Rust Subgroup Intro" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../index.html">UMN Kernel Dev</a></h1>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
 
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../UKO/members.html">Group Participants</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../maize/setup.html">Maize</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../maize/vm-kernel-install.html">Kernel Install in VM</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Creating a Hello World Kernel Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rust.html">Rust Subgroup Intro</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../sched/extern.html">External Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../sched/lsp.html">Language Server Protocol</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../sched/sched.html">Schedulers Subgroup Intro</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../sched/xv6.html">xv6 Operating System</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../virtmem/virtmem.html">Virtual Memory Subgroup Intro</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="../maize/vm-kernel-install.html" title="previous chapter">Kernel Install in VM</a></li>
-      <li>Next: <a href="rust.html" title="next chapter">Rust Subgroup Intro</a></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
-
-
-
-
-
-
-
-
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="../_sources/rust/hello_world_module.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-
-    
-  </body>
+</body>
 </html>
