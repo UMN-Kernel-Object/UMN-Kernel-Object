@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Creating a Hello World Kernel Module &mdash; UMN Kernel Object  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Rust Subgroup Intro" href="rust.html" />
+    <link rel="prev" title="Creating a Simple Encryption Module" href="caesar_module.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            UMN Kernel Object
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../UKO/members.html">Group Participants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maize/setup.html">Maize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maize/vm-kernel-install.html">Kernel Install in VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="caesar_module.html">Creating a Simple Encryption Module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Creating a Hello World Kernel Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rust.html">Rust Subgroup Intro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sched/extern.html">External Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sched/lsp.html">Language Server Protocol</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sched/sched.html">Schedulers Subgroup Intro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sched/xv6.html">xv6 Operating System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../virtmem/virtmem.html">Virtual Memory Subgroup Intro</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">UMN Kernel Object</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Creating a Hello World Kernel Module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/rust/hello_world_module.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="creating-a-hello-world-kernel-module">
+<h1>Creating a Hello World Kernel Module<a class="headerlink" href="#creating-a-hello-world-kernel-module" title="Permalink to this heading"></a></h1>
+<section id="synopsis">
+<h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this heading"></a></h2>
+<p>These steps outline how to modify the kernel source tree to include a new
+“Hello, World!” kernel module. This module only performs the trivial task of
+printing messages to the console  when it is loaded or removed. However, it
+still serves as a useful illustration of how kernel modules are generally
+structured and how to integrate a new module into the existing kernel codebase.</p>
+</section>
+<section id="preliminaries">
+<h2>Preliminaries<a class="headerlink" href="#preliminaries" title="Permalink to this heading"></a></h2>
+<p>This tutorial assumes you already have a working virtual machine set up on our
+<code class="docutils literal notranslate"><span class="pre">maize</span></code> server and that you are able to boot a kernel you have compiled
+yourself on that VM. See our earlier tutorial on installing a custom kernel in a
+VM if you have not already completed these tasks.</p>
+</section>
+<section id="obtaining-the-source-code">
+<h2>Obtaining the Source Code<a class="headerlink" href="#obtaining-the-source-code" title="Permalink to this heading"></a></h2>
+<p>First, you will need to obtain the source code for our simple kernel module.
+You should already have cloned a copy of the Linux kernel source tree from a
+previous tutorial, i.e., you should see something like the following:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>&gt;&gt; git remote -v
+origin  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/ <span class="o">(</span>fetch<span class="o">)</span>
+origin  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/ <span class="o">(</span>push<span class="o">)</span>
+</pre></div>
+</div>
+<p>We have set up a local git repository on <code class="docutils literal notranslate"><span class="pre">maize</span></code> containing the source code
+for this tutorial as a branch. We may choose to use this local git repository
+for future activities, so it is worthwhile to add it to your own repository at
+this time:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>&gt;&gt; git remote add maize /srv/git/linux
+&gt;&gt; git remote -v
+    maize   /srv/git/linux <span class="o">(</span>fetch<span class="o">)</span>
+    maize   /srv/git/linux <span class="o">(</span>push<span class="o">)</span>
+    origin  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/ <span class="o">(</span>fetch<span class="o">)</span>
+    origin  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/ <span class="o">(</span>push<span class="o">)</span>
+</pre></div>
+</div>
+<p>Next, we’ll update the new <code class="docutils literal notranslate"><span class="pre">maize</span></code> remote and switch to the new
+<code class="docutils literal notranslate"><span class="pre">hello_module</span></code> branch available from that remote.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>&gt;&gt; git remote update maize
+<span class="c1"># Should see some ouptut about new information from this remote</span>
+&gt;&gt; git branch hello_module maize/hello_module
+Branch <span class="s1">&#39;hello_module&#39;</span> <span class="nb">set</span> up to track remote branch <span class="s1">&#39;hello_module&#39;</span> from <span class="s1">&#39;maize&#39;</span>.
+&gt;&gt; git switch hello_module
+&gt;&gt; git branch
+* hello_module
+master
+</pre></div>
+</div>
+</section>
+<section id="walking-through-the-source-code">
+<h2>Walking Through the Source Code<a class="headerlink" href="#walking-through-the-source-code" title="Permalink to this heading"></a></h2>
+<p>This branch includes a few changes to the upstream Linux kernel source. In
+short, it adds a new kernel module whose sole purpose is to print the string
+<code class="docutils literal notranslate"><span class="pre">Hello,</span> <span class="pre">World!</span></code> when the module is loaded and to print the string <code class="docutils literal notranslate"><span class="pre">Goodbye,</span>
+<span class="pre">World!</span></code> when the module is removed.</p>
+<p>A module is a unit of code that can be dynamically loaded or removed from the
+kernel at runtime, rather than at compile time. This is often useful with device
+drivers, as it allows the kernel to load only the drivers it needs for the
+specific hardware configuration on which it is running, leaving out drivers for
+irrelevant devices. The module in this tutorial can be viewed as a trivial
+device driver.</p>
+<p>Most of the relevant code for this tutorial is in the
+<code class="docutils literal notranslate"><span class="pre">drivers/staging/hello_world</span></code> subdirectory of the kernel tree. Feel free to go
+to this directory and browse its files with the editor of your choice. A few
+items of note are summarized below.</p>
+<section id="hello-world-c">
+<h3>hello_world.c<a class="headerlink" href="#hello-world-c" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>The functions <code class="docutils literal notranslate"><span class="pre">hello_world_init</span></code> and <code class="docutils literal notranslate"><span class="pre">hello_world_exit</span></code> will be called
+when this kernel module is loaded and removed, respectively.</p></li>
+<li><p>Kernel code doesn’t use <code class="docutils literal notranslate"><span class="pre">printf</span></code> as you are likely accustomed to from
+userspace C programs. Instead, it uses the <code class="docutils literal notranslate"><span class="pre">printk</span></code> function, which has a
+generally similar usage.</p></li>
+<li><p>A few macros are used at the bottom of the C file to specify the description,
+author, and license for the module. These are required for any well-formed
+module in the kernel codebase.</p></li>
+</ul>
+</section>
+<section id="makefile">
+<h3>Makefile<a class="headerlink" href="#makefile" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">SPDX-License-Identifier</span></code> (also included in the C source) specifies the
+license for this code. It is a useful shorthand that is used in place of
+reproducing the full text of the license (here, GPL Version 2). Licensing is
+an important issue in open-source software development that is beyond the
+scope of this tutorial.</p></li>
+<li><p>The second line of this file integrates our module with the larger kernel
+configuration system (discussed below).</p></li>
+</ul>
+</section>
+</section>
+<section id="kernel-configuration">
+<h2>Kernel Configuration<a class="headerlink" href="#kernel-configuration" title="Permalink to this heading"></a></h2>
+<p>The remaining changes in the <code class="docutils literal notranslate"><span class="pre">hello_world_module</span></code> branch allow our new kernel
+module to be integrated with the kernel configuration system. You may remember
+that when you built your first kernel, you had to generate a configuration
+before compilation, linking, etc. could take place. Among many other things,
+this allows you to specify which modules are built into the kernel, which
+modules are made available to load at runtime, and which modules are left out of
+the built kernel.</p>
+<p>We want to be able to apply this same configuration logic to our new, custom
+module, so the following files are changed or modified:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">drivers/staging/hello_world/Kconfig</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">drivers/staging/Makefile</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">drivers/staging/Kconfig</span></code></p></li>
+</ul>
+<p>To begin, generate a default configuration file:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>&gt;&gt; make defconfig
+</pre></div>
+</div>
+<p>Next, <strong>you</strong> will need to manually edit the just-generated <code class="docutils literal notranslate"><span class="pre">.config</span></code> file
+to make the following changes:</p>
+<ol class="arabic simple">
+<li><p>Change the commented out text <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">CONFIG_STAGING</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">set</span></code> to instead read
+<code class="docutils literal notranslate"><span class="pre">CONFIG_STAGING=y</span></code>.</p></li>
+<li><p>Add a new line immediately below this that reads <code class="docutils literal notranslate"><span class="pre">CONFIG_HELLO_WORLD=y</span></code>.</p></li>
+</ol>
+<p>Save your work and then reconfigure your kernel based on these new changes:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>&gt;&gt; make oldconfig
+</pre></div>
+</div>
+<p>At this point, go ahead and rebuild a new version of the Linux kernel, hopefully
+including our new module, using some sensible value for the <code class="docutils literal notranslate"><span class="pre">-j</span></code> flag to
+benefit from our server’s multiple cores.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>&gt;&gt; make -j <span class="m">20</span>
+</pre></div>
+</div>
+<p>You may get a few prompts about the inclusion of other device drivers in your
+built kernel. Type in <code class="docutils literal notranslate"><span class="pre">n</span></code> for all of these prompts.</p>
+</section>
+<section id="kernel-installation">
+<h2>Kernel Installation<a class="headerlink" href="#kernel-installation" title="Permalink to this heading"></a></h2>
+<p>You are now ready to install your new custom kernel on your virtual machine.
+This was covered in detail in a previous tutorial, and you should follow the
+instructions there.</p>
+<p>It’s recommended that you create a snapshot of your virtual machine in its
+current, working state before installing a new kernel.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>&gt;&gt; virsh snapshot-create-as ubuntu22 before_hello
+</pre></div>
+</div>
+<p>Here is a very brief recap of the steps to install and boot a custom kernel in
+your VM:</p>
+<ol class="arabic simple">
+<li><p>Mount the VM’s file system in the host using the <code class="docutils literal notranslate"><span class="pre">guestmount</span></code> command.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">make</span></code> to install the kernel and its modules in the mounted filesystem.</p></li>
+<li><p>Unmount the VM guest’s filesystem from the host.</p></li>
+<li><p>Run the <code class="docutils literal notranslate"><span class="pre">guestunmount</span></code> command to unmount the VM’s file system.</p></li>
+<li><p>Boot into your VM with the <code class="docutils literal notranslate"><span class="pre">virsh</span></code> tool.</p></li>
+<li><p>Run the <code class="docutils literal notranslate"><span class="pre">initupdate-ramfs</span></code> and <code class="docutils literal notranslate"><span class="pre">update-grub</span></code> commands in your VM.</p></li>
+<li><p>Reboot the virtual machine.</p></li>
+</ol>
+</section>
+<section id="booting-the-new-kernel">
+<h2>Booting the New Kernel<a class="headerlink" href="#booting-the-new-kernel" title="Permalink to this heading"></a></h2>
+<p>At this point, you likely have several kernel versions installed on your VM. You
+will most likely see the following versions reflected in <code class="docutils literal notranslate"><span class="pre">/boot</span></code> and on the
+GRUB menu when your VM starts up. They likely look something like the following:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">5.15.0-52-generic</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">6.1.0-rc7-00101-g01f85...</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">6.1.0-rc7-00102-gabe44...</span></code></p></li>
+</ol>
+<p>The first version came with the base Ubuntu 22.04 installation and the second
+version was installed in our previous VM and kernel boot tutorial. You should
+boot the <cite>last</cite>, most recent version as it will contain our new module.</p>
+<p>The kernel module should have printed out a message to the cosole when your VM
+booted up, but it probably went by too quickly for you to notice. We’ll use the
+<code class="docutils literal notranslate"><span class="pre">journalctl</span></code> tool to review the logs from our most recent kernel boot.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>    &gt;&gt; uname -a
+    Linux kerneldev <span class="m">6</span>.1.0-rc7-00102-gabe44...
+&gt;&gt; journalctl -b
+<span class="c1"># Boot Log Messages Appear on Screen</span>
+</pre></div>
+</div>
+<p>If you search this output, you should find the following line:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>Nov <span class="m">29</span> <span class="m">22</span>:23:38 kerneldev kernel: Hello, World!
+</pre></div>
+</div>
+<p>Where the date at the left will likely be different for you. Congratulations,
+you have now booted a kernel containing some of your own custom code!</p>
+<p>One useful hint: The <code class="docutils literal notranslate"><span class="pre">-b</span></code> flag for <code class="docutils literal notranslate"><span class="pre">journalctl</span></code> indicates we want to read
+logs from the system boot. We can also view logs from <cite>previous</cite> boots of our
+virtual machine as follows:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>&gt;&gt; journalctl -b -1 <span class="c1"># View logs from previous boot</span>
+&gt;&gt; journalctl -b -2 <span class="c1"># View logs from two boots ago</span>
+&gt;&gt; journalctl -b -3 <span class="c1"># View logs from three boots ago</span>
+etc.
+</pre></div>
+</div>
+</section>
+<section id="recovering-from-a-broken-kernel">
+<h2>Recovering from a Broken Kernel<a class="headerlink" href="#recovering-from-a-broken-kernel" title="Permalink to this heading"></a></h2>
+<p>One you actually start hacking on kernel code, you are likely to introduce bugs
+that may cause a kernel panic, where your VM fails to boot at all. This is
+precisely why we are working within virtual machines rather than directly on a
+real system.</p>
+<p>To address this, you should get into the habit of snapshotting your VM when it
+is in a working state and before you try booting a new, unproven kernel.</p>
+<p>Let’s snapshot our VM now that our simple kernel module is working.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>&gt;&gt; virsh snapshot-create-as ubuntu_22 after_hello
+Domain snapshot after_hello created
+</pre></div>
+</div>
+<p>Next, say we intentionally introduce an error in our kernel module:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">__init</span><span class="w"> </span><span class="nf">hello_world_init</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"></span>
+<span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">     </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">;</span><span class="w"></span>
+<span class="w">     </span><span class="n">printk</span><span class="p">(</span><span class="s">&quot;*c = %c</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="p">);</span><span class="w"></span>
+<span class="w">     </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<p>If we follow the usual steps to build and install this kernerl in our VM, we
+should expect to see some kind of failure because we’re dereferencing a null
+pointer.</p>
+<p><cite>Note</cite>: If you’re following along and make this change, then compile and
+install your kernel, you’ll end up with a new set of files in <code class="docutils literal notranslate"><span class="pre">/boot</span></code> and a
+new GRUB menu entry called something like <code class="docutils literal notranslate"><span class="pre">6.1.0-rc7-0102-...-dirty</span></code>, since
+you are creating a kernel based changes that are uncommitted to git.</p>
+<p>Booting this kernel should produce a message indicating that a panic has
+occurred and including a bunch of diagnostic information. At this point, you
+should detach from your VM session with the key sequence <code class="docutils literal notranslate"><span class="pre">&lt;Ctrl&gt;]</span></code>. You can
+then shut down your VM with the <code class="docutils literal notranslate"><span class="pre">virsh</span> <span class="pre">destroy</span></code> command (don’t worry, the
+<code class="docutils literal notranslate"><span class="pre">destroy</span></code> command sounds more serious than it is – it shuts off your VM but
+you won’t lose anything as a result).</p>
+<p>At this point, you have a couple of options with your VM. You can continue to
+use it, being sure to select some working kernel version from the GRUB menu at
+boot. Or, you can restore your VM from a snapshot to bring it back to a working
+state.</p>
+<p>The second option is recommended as it doesn’t depend on the error-prone process
+of reading GRUB menu output in the console and always choosing the correct menu
+entry.</p>
+<p>To restore our virtual machine back to its state before we installed the buggy
+kernel, we can use the following command:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>&gt;&gt; virsh snapshot revert ubuntu22 after_hello
+&gt;&gt; virsh start ubuntu22 --console
+<span class="c1"># Should now see a successful boot</span>
+</pre></div>
+</div>
+</section>
+<section id="loading-a-buggy-kernel-module">
+<h2>Loading a Buggy Kernel Module<a class="headerlink" href="#loading-a-buggy-kernel-module" title="Permalink to this heading"></a></h2>
+<p>Change the line for the hello world kernel module in your <code class="docutils literal notranslate"><span class="pre">.config</span></code> file from</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">CONFIG_HELLO_WORLD</span><span class="o">=</span>y
+</pre></div>
+</div>
+<p>to the following:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">CONFIG_HELLO_WORLD</span><span class="o">=</span>m
+</pre></div>
+</div>
+<p>This will make our code available to the kernel as a module to load at runtime,
+but it will not incorporate it directly into the kernel as it did before.</p>
+<p>Now, we reconfigure our kernel with <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">oldconfig</span></code>, then recompile and
+reinstall the new kernel into our virtual machine. Reboot your virtual machine,
+making sure to select the <code class="docutils literal notranslate"><span class="pre">6.1.0-rc7-00102-...-dirty</span></code> kernel version.</p>
+<p>You should now see your VM boot successfully. Since our module was not
+automatically loaded, its bug has not (yet) affected our system. Let’s now
+instruct the kernel to load our module:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>&gt;&gt; sudo modprobe hello_world
+<span class="c1"># Should see error messages reflecting kernel panic</span>
+</pre></div>
+</div>
+<p>Now, we can observe that, while loading the module failed due to the bug in its
+initialization logic, the system itself stays up and running.</p>
+</section>
+<section id="future-goal-kernel-build-script">
+<h2>Future Goal: Kernel Build Script<a class="headerlink" href="#future-goal-kernel-build-script" title="Permalink to this heading"></a></h2>
+<p>Eventually, we should aim to have a script that takes care of the tedium around
+building and installing a new kernel (compiling, mounting the guest VM’s file
+system, etc.). One important part of this script will likely be generating a
+snapshot of the VM, so that we always have a working configuration to fall back
+to.</p>
+<p>The current issue preventing our developing such a script is identifying a
+method to run commands <cite>in the VM</cite> from a script executed on the host. This will
+be necessary for the <cite>update-initramfs</cite> and <cite>update-grub</cite> commands.</p>
+<p>If anyone would like to investigate this or knows of a solution, it would be a
+valuable contribution to the group!</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="caesar_module.html" class="btn btn-neutral float-left" title="Creating a Simple Encryption Module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rust.html" class="btn btn-neutral float-right" title="Rust Subgroup Intro" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
