@@ -28,7 +28,7 @@ const NavbarComponent: React.FC<NavbarProps> = ({ title, links}) => {
           <Offcanvas.Body>
             <Nav className="justify-content-end flex-grow-1 pe-3">
               {links.map((link, index ) =>
-                <li key = {index}>
+                <li className="nav-item active" key = {index}>
                   <Nav.Link href={link.url} > {link.text} </Nav.Link>
                 </li>
               )}
