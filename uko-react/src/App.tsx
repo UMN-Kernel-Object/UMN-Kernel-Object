@@ -4,7 +4,7 @@ import NavbarComponent from './components/NavbarComponent';
 function App() {
   const links = [
     {text: 'About', url:'/'},
-    {text: 'Documentation', url: '/docs/'}
+    {text: 'Documentation', url: '/docs/index.html'},
   ];
   return (
     <NavbarComponent title = "UMN-Kernel Object" links = {links}/>
