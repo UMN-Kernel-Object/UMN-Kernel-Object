@@ -1,19 +1,12 @@
-import React from 'react';
-import NavbarComponent from './components/NavbarComponent';
+import React from "react";
+import NavbarComponent from "./components/NavbarComponent";
 
 function App() {
   const links = [
-    {text: 'About', url:'/'},
-    {text: 'Documentation', url: '/docs/index.html'},
+    { text: "About", url: "/" },
+    { text: "Documentation", url: "/docs" },
   ];
-  return (
-    <NavbarComponent title = "UMN-Kernel Object" links = {links}/>
-  );
+  return <NavbarComponent title="UMN-Kernel Object" links={links} />;
 }
-
-
-
-
-
 
 export default App;
