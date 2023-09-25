@@ -1,2 +1,5 @@
-# UMN-Kernel-Object.github.io
-This repo contains our public site!
+# UKO Website
+
+This repo contains our website.
+
+
