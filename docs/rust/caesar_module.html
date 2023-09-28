@@ -11,12 +11,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -108,22 +107,22 @@ on those topics.</p>
 module. You should already have a remote set up to access our git repository
 hosted locally on maize. That is, you should see something like the following in
 your Linux source tree:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>&gt;&gt; git remote -v
-    maize   /srv/git/linux <span class="o">(</span>fetch<span class="o">)</span>
-    maize   /srv/git/linux <span class="o">(</span>push<span class="o">)</span>
-    origin  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/ <span class="o">(</span>fetch<span class="o">)</span>
-    origin  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/ <span class="o">(</span>push<span class="o">)</span>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>&gt;&gt;<span class="w"> </span>git<span class="w"> </span>remote<span class="w"> </span>-v
+<span class="w">    </span>maize<span class="w">   </span>/srv/git/linux<span class="w"> </span><span class="o">(</span>fetch<span class="o">)</span>
+<span class="w">    </span>maize<span class="w">   </span>/srv/git/linux<span class="w"> </span><span class="o">(</span>push<span class="o">)</span>
+<span class="w">    </span>origin<span class="w">  </span>https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/<span class="w"> </span><span class="o">(</span>fetch<span class="o">)</span>
+<span class="w">    </span>origin<span class="w">  </span>https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/<span class="w"> </span><span class="o">(</span>push<span class="o">)</span>
 </pre></div>
 </div>
 <p>Next, we’ll update the <code class="docutils literal notranslate"><span class="pre">maize</span></code> remote and switch to the new <code class="docutils literal notranslate"><span class="pre">caesar</span></code> branch
 available from that remote.</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>&gt;&gt; git remote update maize
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>&gt;&gt;<span class="w"> </span>git<span class="w"> </span>remote<span class="w"> </span>update<span class="w"> </span>maize
 <span class="c1"># Should see some ouptut about new information from this remote</span>
-&gt;&gt; git branch caesar maize/caesar
-Branch <span class="s1">&#39;caesar&#39;</span> <span class="nb">set</span> up to track remote branch <span class="s1">&#39;caesar&#39;</span> from <span class="s1">&#39;maize&#39;</span>.
-&gt;&gt; git switch caesar
-&gt;&gt; git branch
-* caesar
+&gt;&gt;<span class="w"> </span>git<span class="w"> </span>branch<span class="w"> </span>caesar<span class="w"> </span>maize/caesar
+Branch<span class="w"> </span><span class="s1">&#39;caesar&#39;</span><span class="w"> </span><span class="nb">set</span><span class="w"> </span>up<span class="w"> </span>to<span class="w"> </span>track<span class="w"> </span>remote<span class="w"> </span>branch<span class="w"> </span><span class="s1">&#39;caesar&#39;</span><span class="w"> </span>from<span class="w"> </span><span class="s1">&#39;maize&#39;</span>.
+&gt;&gt;<span class="w"> </span>git<span class="w"> </span>switch<span class="w"> </span>caesar
+&gt;&gt;<span class="w"> </span>git<span class="w"> </span>branch
+*<span class="w"> </span>caesar
 master
 </pre></div>
 </div>
@@ -286,19 +285,19 @@ appropriate file. We should be able to read back the encrypted form of what was
 written immediately before.</p>
 <p>Here’s a rudimentary C program to “encrypt” the text <code class="docutils literal notranslate"><span class="pre">Hello,</span> <span class="pre">World!</span></code>. You may
 want to add some error checking for easier debugging.</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Hello, World!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">fd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">open</span><span class="p">(</span><span class="s">&quot;/sys/kernel/debug/caesar/encrypt&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">O_WRONLY</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">write</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span><span class="w"> </span><span class="n">message</span><span class="p">,</span><span class="w"> </span><span class="n">strlen</span><span class="p">(</span><span class="n">message</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">);</span><span class="w"></span>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Hello, World!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">fd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">open</span><span class="p">(</span><span class="s">&quot;/sys/kernel/debug/caesar/encrypt&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">O_WRONLY</span><span class="p">);</span>
+<span class="w">    </span><span class="n">write</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span><span class="w"> </span><span class="n">message</span><span class="p">,</span><span class="w"> </span><span class="n">strlen</span><span class="p">(</span><span class="n">message</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">    </span><span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">);</span>
 
-<span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="n">buf</span><span class="p">[</span><span class="mi">512</span><span class="p">];</span><span class="w"></span>
-<span class="w">    </span><span class="n">fd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">open</span><span class="p">(</span><span class="s">&quot;/sys/kernel/debug/caesar/encrypt&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">O_RDONLY</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">read</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span><span class="w"> </span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="mi">512</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Ciphertext: %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">buf</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="n">buf</span><span class="p">[</span><span class="mi">512</span><span class="p">];</span>
+<span class="w">    </span><span class="n">fd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">open</span><span class="p">(</span><span class="s">&quot;/sys/kernel/debug/caesar/encrypt&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">O_RDONLY</span><span class="p">);</span>
+<span class="w">    </span><span class="n">read</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span><span class="w"> </span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="mi">512</span><span class="p">);</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Ciphertext: %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">buf</span><span class="p">);</span>
 
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </section>

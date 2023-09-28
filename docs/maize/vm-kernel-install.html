@@ -11,12 +11,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -100,46 +99,46 @@ into it.</p>
 <section id="tutorial-steps">
 <h2>Tutorial Steps<a class="headerlink" href="#tutorial-steps" title="Permalink to this heading"></a></h2>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># log into the maize server</span>
-laptop&gt;&gt; ssh myx500@maize.cs.umn.edu
+laptop&gt;&gt;<span class="w"> </span>ssh<span class="w"> </span>myx500@maize.cs.umn.edu
 ...
 
 <span class="c1"># check that you are a member of the correct Linux groups to run VMs</span>
 <span class="c1"># with hardware acceleration</span>
-&gt;&gt; groups
-... kvm libvirt libvirt-qemu ...
+&gt;&gt;<span class="w"> </span>groups
+...<span class="w"> </span>kvm<span class="w"> </span>libvirt<span class="w"> </span>libvirt-qemu<span class="w"> </span>...
 
 <span class="c1"># If missing, ask an admin to run the command</span>
-&gt;&gt; sudo usermod -a -G kvm,libvirt-qemu,libvirt myusername
+&gt;&gt;<span class="w"> </span>sudo<span class="w"> </span>usermod<span class="w"> </span>-a<span class="w"> </span>-G<span class="w"> </span>kvm,libvirt-qemu,libvirt<span class="w"> </span>myusername
 
 <span class="c1"># Set environment variable, consider addin this line to ~/.profile so</span>
 <span class="c1"># it is set on each login</span>
-&gt;&gt; <span class="nb">export</span> <span class="nv">LIBVIRT_DEFAULT_URI</span><span class="o">=</span>qemu:///session
+&gt;&gt;<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">LIBVIRT_DEFAULT_URI</span><span class="o">=</span>qemu:///session
 
 <span class="c1"># Copy Virtual Machine Image via kauffman&#39;s script; amounts to a</span>
 <span class="c1"># virt-clone with some files / options</span>
-&gt;&gt; ~kauffman/vm-shares/clone-vm.sh
+&gt;&gt;<span class="w"> </span>~kauffman/vm-shares/clone-vm.sh
 
 <span class="c1"># Log in to Guest VM and experiment</span>
 <span class="c1">#</span>
 <span class="c1"># NOTE: console can be flaky especially for Grub boot loader, Press</span>
 <span class="c1"># the Up / Down arows and some highlighted text should appear</span>
 <span class="c1"># indicating which kernel will boot</span>
-&gt;&gt; virsh start ubuntu22 --console
+&gt;&gt;<span class="w"> </span>virsh<span class="w"> </span>start<span class="w"> </span>ubuntu22<span class="w"> </span>--console
 ...
-login: user
-password: linuxrocks
+login:<span class="w"> </span>user
+password:<span class="w"> </span>linuxrocks
 ...
-user@kerneldev:~$ ls
+user@kerneldev:~$<span class="w"> </span>ls
 ...
 <span class="c1"># Check Guest VM kernel version</span>
-user@kerneldev:~$ uname -a
-Linux kerneldev <span class="m">5</span>.15.0-52-generic <span class="c1">#58-Ubuntu SMP Thu Oct 13 08:03:55 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux</span>
+user@kerneldev:~$<span class="w"> </span>uname<span class="w"> </span>-a
+Linux<span class="w"> </span>kerneldev<span class="w"> </span><span class="m">5</span>.15.0-52-generic<span class="w"> </span><span class="c1">#58-Ubuntu SMP Thu Oct 13 08:03:55 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux</span>
 
 <span class="c1"># Escape from VM via Ctrl-]</span>
 &gt;&gt;
 <span class="c1"># VM Continues to run in the background</span>
 <span class="c1"># Re-enter VM console</span>
-&gt;&gt; virsh console ubuntu22
+&gt;&gt;<span class="w"> </span>virsh<span class="w"> </span>console<span class="w"> </span>ubuntu22
 
 <span class="c1"># May need to press Enter to re-display prompt</span>
 user@kerneldev:~$
@@ -147,45 +146,45 @@ user@kerneldev:~$
 <span class="c1"># Escape to VM or run `sudo shutdown now`</span>
 
 <span class="c1"># Ensure VM is shutdown before proceeding</span>
-&gt;&gt; virsh shutdown ubuntu22
+&gt;&gt;<span class="w"> </span>virsh<span class="w"> </span>shutdown<span class="w"> </span>ubuntu22
 
 <span class="c1"># Mount VM image on host via guestmount</span>
-&gt;&gt; mkdir <span class="nv">$HOME</span>/mnt
-&gt;&gt; guestmount -a <span class="nv">$HOME</span>/.local/share/libvirt/images/ubuntu22.qcow2 -i <span class="nv">$HOME</span>/mnt
+&gt;&gt;<span class="w"> </span>mkdir<span class="w"> </span><span class="nv">$HOME</span>/mnt
+&gt;&gt;<span class="w"> </span>guestmount<span class="w"> </span>-a<span class="w"> </span><span class="nv">$HOME</span>/.local/share/libvirt/images/ubuntu22.qcow2<span class="w"> </span>-i<span class="w"> </span><span class="nv">$HOME</span>/mnt
 
 <span class="c1"># Change to linux source tree (and build it if needed)</span>
-&gt;&gt; <span class="nb">cd</span> <span class="nv">$HOME</span>/linux
+&gt;&gt;<span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="nv">$HOME</span>/linux
 
 <span class="c1"># Install kernel with adjusted root directory</span>
-&gt;&gt; make install <span class="nv">INSTALL_PATH</span><span class="o">=</span><span class="nv">$HOME</span>/mnt/boot
+&gt;&gt;<span class="w"> </span>make<span class="w"> </span>install<span class="w"> </span><span class="nv">INSTALL_PATH</span><span class="o">=</span><span class="nv">$HOME</span>/mnt/boot
 
 <span class="c1"># Install kernel modules with adjusted root</span>
-&gt;&gt; make modules_install <span class="nv">INSTALL_MOD_PATH</span><span class="o">=</span><span class="nv">$HOME</span>/mnt
+&gt;&gt;<span class="w"> </span>make<span class="w"> </span>modules_install<span class="w"> </span><span class="nv">INSTALL_MOD_PATH</span><span class="o">=</span><span class="nv">$HOME</span>/mnt
 
 <span class="c1"># Unmount guest disk</span>
-&gt;&gt; guestunmount <span class="nv">$HOME</span>/mnt
+&gt;&gt;<span class="w"> </span>guestunmount<span class="w"> </span><span class="nv">$HOME</span>/mnt
 
 <span class="c1"># Start virtual machine</span>
-&gt;&gt; virsh start ubuntu22 --console
+&gt;&gt;<span class="w"> </span>virsh<span class="w"> </span>start<span class="w"> </span>ubuntu22<span class="w"> </span>--console
 ...
-login: user
-password: linuxrocks
+login:<span class="w"> </span>user
+password:<span class="w"> </span>linuxrocks
 ..
 user@kerneldev:~$
 
 <span class="c1"># Check that files are listed properly in the /boot directory</span>
-user@kerneldev:~$ ls /boot
+user@kerneldev:~$<span class="w"> </span>ls<span class="w"> </span>/boot
 ...
-vmlinuz-5.15.0-52-generic                  <span class="c1"># old kernel</span>
-vmlinuz-6.1.0-rc2-00189-g23758867219c      <span class="c1"># fresh kernel</span>
+vmlinuz-5.15.0-52-generic<span class="w">                  </span><span class="c1"># old kernel</span>
+vmlinuz-6.1.0-rc2-00189-g23758867219c<span class="w">      </span><span class="c1"># fresh kernel</span>
 ...
-System.map-5.15.0-52-generic               <span class="c1"># old kernel symbols</span>
-System.map-6.1.0-rc2-00189-g23758867219c   <span class="c1"># fresh symbols</span>
+System.map-5.15.0-52-generic<span class="w">               </span><span class="c1"># old kernel symbols</span>
+System.map-6.1.0-rc2-00189-g23758867219c<span class="w">   </span><span class="c1"># fresh symbols</span>
 ...
-config-5.15.0-52-generic                   <span class="c1"># old config</span>
-config-6.1.0-rc2-00189-g23758867219c       <span class="c1"># fresh config</span>
+config-5.15.0-52-generic<span class="w">                   </span><span class="c1"># old config</span>
+config-6.1.0-rc2-00189-g23758867219c<span class="w">       </span><span class="c1"># fresh config</span>
 ...
-initrd.img-5.15.0-52-generic               <span class="c1"># old initial ram disk</span>
+initrd.img-5.15.0-52-generic<span class="w">               </span><span class="c1"># old initial ram disk</span>
 <span class="c1"># need a fresh initial ramdisk</span>
 
 user@kerneldev:~$
@@ -193,69 +192,69 @@ user@kerneldev:~$
 &gt;&gt;
 
 <span class="c1"># Create a snapshot just in case...</span>
-&gt;&gt; virsh snapshot-create-as ubuntu22 before-rdupdate
-Domain snapshot before-rdupdate created
+&gt;&gt;<span class="w"> </span>virsh<span class="w"> </span>snapshot-create-as<span class="w"> </span>ubuntu22<span class="w"> </span>before-rdupdate
+Domain<span class="w"> </span>snapshot<span class="w"> </span>before-rdupdate<span class="w"> </span>created
 
 <span class="c1"># Show the snapshot</span>
-&gt;&gt; virsh snapshot-list ubuntu22
- Name              Creation Time               State
+&gt;&gt;<span class="w"> </span>virsh<span class="w"> </span>snapshot-list<span class="w"> </span>ubuntu22
+<span class="w"> </span>Name<span class="w">              </span>Creation<span class="w"> </span>Time<span class="w">               </span>State
 --------------------------------------------------------
- before-rdupdate   <span class="m">2022</span>-11-09 <span class="m">05</span>:54:57 +0000   running
+<span class="w"> </span>before-rdupdate<span class="w">   </span><span class="m">2022</span>-11-09<span class="w"> </span><span class="m">05</span>:54:57<span class="w"> </span>+0000<span class="w">   </span>running
 
 <span class="c1"># Return to the guest VM</span>
-&gt;&gt; virsh console ubuntu22
+&gt;&gt;<span class="w"> </span>virsh<span class="w"> </span>console<span class="w"> </span>ubuntu22
 
 user@kerneldev:~$
 
 <span class="c1"># Re-generate ramdisks for all kernel</span>
-user@kerneldev:~$ sudo update-initramfs -c -k all
-update-initramfs: Generating /boot/initrd.img-5.15.0-52-generic
-update-initramfs: Generating /boot/initrd.img-6.1.0-rc2-00189-g23758867219c
-W: Possible missing firmware /lib/firmware/i915/dg1_huc.bin <span class="k">for</span> built-in driver i915
-... <span class="c1"># various other warnings</span>
+user@kerneldev:~$<span class="w"> </span>sudo<span class="w"> </span>update-initramfs<span class="w"> </span>-c<span class="w"> </span>-k<span class="w"> </span>all
+update-initramfs:<span class="w"> </span>Generating<span class="w"> </span>/boot/initrd.img-5.15.0-52-generic
+update-initramfs:<span class="w"> </span>Generating<span class="w"> </span>/boot/initrd.img-6.1.0-rc2-00189-g23758867219c
+W:<span class="w"> </span>Possible<span class="w"> </span>missing<span class="w"> </span>firmware<span class="w"> </span>/lib/firmware/i915/dg1_huc.bin<span class="w"> </span><span class="k">for</span><span class="w"> </span>built-in<span class="w"> </span>driver<span class="w"> </span>i915
+...<span class="w"> </span><span class="c1"># various other warnings</span>
 
 <span class="c1"># Update the boot loader (kernel selector)</span>
-user@kerneldev:~$ sudo update-grub
+user@kerneldev:~$<span class="w"> </span>sudo<span class="w"> </span>update-grub
 
 <span class="c1"># Reboot the guest vm</span>
-user@kerneldev:~$ sudo reboot
+user@kerneldev:~$<span class="w"> </span>sudo<span class="w"> </span>reboot
 ....
 
 <span class="c1"># Grub menu should appear, select new kernel 6.1</span>
-                             GNU GRUB  version <span class="m">2</span>.06
+<span class="w">                             </span>GNU<span class="w"> </span>GRUB<span class="w">  </span>version<span class="w"> </span><span class="m">2</span>.06
 
- +----------------------------------------------------------------------------+
- <span class="p">|</span>*Ubuntu, with Linux <span class="m">6</span>.1.0-rc2-00189-g23758867219c                           <span class="p">|</span>
- <span class="p">|</span> Ubuntu, with Linux <span class="m">6</span>.1.0-rc2-00189-g23758867219c <span class="o">(</span>recovery mode<span class="o">)</span>           <span class="p">|</span>
- <span class="p">|</span> Ubuntu, with Linux <span class="m">5</span>.15.0-52-generic                                       <span class="p">|</span>
- <span class="p">|</span> Ubuntu, with Linux <span class="m">5</span>.15.0-52-generic <span class="o">(</span>recovery mode<span class="o">)</span>                       <span class="p">|</span>
- <span class="p">|</span>                                                                            <span class="p">|</span>
- <span class="p">|</span>                                                                            <span class="p">|</span>
- <span class="p">|</span>                                                                            <span class="p">|</span>
- <span class="p">|</span>                                                                            <span class="p">|</span>
- <span class="p">|</span>                                                                            <span class="p">|</span>
- <span class="p">|</span>                                                                            <span class="p">|</span>
- <span class="p">|</span>                                                                            <span class="p">|</span>
- <span class="p">|</span>                                                                            <span class="p">|</span>
- +----------------------------------------------------------------------------+
+<span class="w"> </span>+----------------------------------------------------------------------------+
+<span class="w"> </span><span class="p">|</span>*Ubuntu,<span class="w"> </span>with<span class="w"> </span>Linux<span class="w"> </span><span class="m">6</span>.1.0-rc2-00189-g23758867219c<span class="w">                           </span><span class="p">|</span>
+<span class="w"> </span><span class="p">|</span><span class="w"> </span>Ubuntu,<span class="w"> </span>with<span class="w"> </span>Linux<span class="w"> </span><span class="m">6</span>.1.0-rc2-00189-g23758867219c<span class="w"> </span><span class="o">(</span>recovery<span class="w"> </span>mode<span class="o">)</span><span class="w">           </span><span class="p">|</span>
+<span class="w"> </span><span class="p">|</span><span class="w"> </span>Ubuntu,<span class="w"> </span>with<span class="w"> </span>Linux<span class="w"> </span><span class="m">5</span>.15.0-52-generic<span class="w">                                       </span><span class="p">|</span>
+<span class="w"> </span><span class="p">|</span><span class="w"> </span>Ubuntu,<span class="w"> </span>with<span class="w"> </span>Linux<span class="w"> </span><span class="m">5</span>.15.0-52-generic<span class="w"> </span><span class="o">(</span>recovery<span class="w"> </span>mode<span class="o">)</span><span class="w">                       </span><span class="p">|</span>
+<span class="w"> </span><span class="p">|</span><span class="w">                                                                            </span><span class="p">|</span>
+<span class="w"> </span><span class="p">|</span><span class="w">                                                                            </span><span class="p">|</span>
+<span class="w"> </span><span class="p">|</span><span class="w">                                                                            </span><span class="p">|</span>
+<span class="w"> </span><span class="p">|</span><span class="w">                                                                            </span><span class="p">|</span>
+<span class="w"> </span><span class="p">|</span><span class="w">                                                                            </span><span class="p">|</span>
+<span class="w"> </span><span class="p">|</span><span class="w">                                                                            </span><span class="p">|</span>
+<span class="w"> </span><span class="p">|</span><span class="w">                                                                            </span><span class="p">|</span>
+<span class="w"> </span><span class="p">|</span><span class="w">                                                                            </span><span class="p">|</span>
+<span class="w"> </span>+----------------------------------------------------------------------------+
 ....
 <span class="c1"># Expect some minor failures in the boot messages as the new kernel</span>
 <span class="c1"># doesn&#39;t have all modules build properly</span>
 ...
 <span class="c1"># Log in to Guest VM</span>
-login: user
-password: linuxrocks
+login:<span class="w"> </span>user
+password:<span class="w"> </span>linuxrocks
 
 <span class="c1"># Check that the new kernel is running</span>
-user@kerneldev:~$ uname -a
-Linux kerneldev <span class="m">6</span>.1.0-rc2-00189-g23758867219c <span class="c1">#1 SMP PREEMPT_DYNAMIC Sat Oct 29 21:27:42 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux</span>
+user@kerneldev:~$<span class="w"> </span>uname<span class="w"> </span>-a
+Linux<span class="w"> </span>kerneldev<span class="w"> </span><span class="m">6</span>.1.0-rc2-00189-g23758867219c<span class="w"> </span><span class="c1">#1 SMP PREEMPT_DYNAMIC Sat Oct 29 21:27:42 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux</span>
 
 <span class="c1"># Press Ctrl-] to escape to host shell</span>
 &gt;&gt;
 
 <span class="c1"># Take a snapshot of the install</span>
-&gt;&gt; virsh snapshot-create-as ubuntu22 kernel-61-installed
-Domain snapshot kernel-61-installed created
+&gt;&gt;<span class="w"> </span>virsh<span class="w"> </span>snapshot-create-as<span class="w"> </span>ubuntu22<span class="w"> </span>kernel-61-installed
+Domain<span class="w"> </span>snapshot<span class="w"> </span>kernel-61-installed<span class="w"> </span>created
 
 <span class="c1"># Congratulations!</span>
 </pre></div>
@@ -303,14 +302,14 @@ efficient way to do this as can specify alternate kernels to use at
 boot time; lose the nice management features of libvirt, easy
 console escape / restoration, initial forays did resulted in errors
 and kernel panics; ideally something like</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>qemu-system-x86_64 <span class="se">\</span>
-    -nographic <span class="se">\</span>
-    -m <span class="m">4096</span> <span class="se">\</span>
-    -cpu host <span class="se">\</span>
-    --enable-kvm <span class="se">\</span>
-    -kernel /home/kauffman/linux/arch/x86_64/boot/bzImage <span class="se">\</span>
-    -append <span class="s2">&quot;console=ttyS0 root=/dev/sda&quot;</span> <span class="se">\</span>
-    -hda /home/kauffman/.local/share/libvirt/images/ubuntu22_work.qcow2
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>qemu-system-x86_64<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-nographic<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-m<span class="w"> </span><span class="m">4096</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-cpu<span class="w"> </span>host<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--enable-kvm<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-kernel<span class="w"> </span>/home/kauffman/linux/arch/x86_64/boot/bzImage<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-append<span class="w"> </span><span class="s2">&quot;console=ttyS0 root=/dev/sda&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-hda<span class="w"> </span>/home/kauffman/.local/share/libvirt/images/ubuntu22_work.qcow2
 </pre></div>
 </div>
 <p>but since modules and initial ram disk are needed, likely the setup
