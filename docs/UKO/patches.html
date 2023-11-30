@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Code Patches &mdash; UMN Kernel Object  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            UMN Kernel Object
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">UKO General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maize/index.html">Maize information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rust/index.html">Rust Subgroup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sched/index.html">Schedulers Subgroup Intro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../virtmem/index.html">Virtual Memory Subgroup</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">UMN Kernel Object</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Code Patches</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/UKO/patches.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="code-patches">
+<h1>Code Patches<a class="headerlink" href="#code-patches" title="Permalink to this heading"></a></h1>
+<p>All code patches may be submitted to
+<a class="reference external" href="mailto:UKO-PATCHES&#37;&#52;&#48;lists&#46;umn&#46;edu">UKO-PATCHES<span>&#64;</span>lists<span>&#46;</span>umn<span>&#46;</span>edu</a> for review.
+Before sending a patch, your UMN email must be subscribed to the list.
+You can do that <a class="reference external" href="https://lists.umn.edu/cgi-bin/wa?A0=UKO-PATCHES&amp;X=O363B529658766E8A03&amp;Y">here</a>.</p>
+<img alt="../_images/patches_sub.avif" src="../_images/patches_sub.avif" />
+<p>Once subscribed, you may send emails and respond to other patch submissions
+with feedback.</p>
+<section id="creating-a-patch">
+<h2>Creating a Patch<a class="headerlink" href="#creating-a-patch" title="Permalink to this heading"></a></h2>
+<p>It is assumed that you have cloned some UKO repository, made a valuable change,
+and committed it locally. In order to submit that change for review, a patch
+must be created using <a class="reference external" href="https://git-scm.com/docs/git-format-patch">git-format-patch(1)</a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="nb">format</span><span class="o">-</span><span class="n">patch</span> <span class="o">--</span><span class="n">signoff</span> <span class="o">&lt;</span><span class="n">commit</span> <span class="nb">range</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>For example, to create a patch for the latest commit:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="nb">format</span><span class="o">-</span><span class="n">patch</span> <span class="o">--</span><span class="n">signoff</span> <span class="n">HEAD</span><span class="o">~</span><span class="mi">1</span>
+</pre></div>
+</div>
+</section>
+<section id="sending-a-patch">
+<h2>Sending a Patch<a class="headerlink" href="#sending-a-patch" title="Permalink to this heading"></a></h2>
+<p>Patches may be sent to the mailing list using
+<a class="reference external" href="https://git-scm.com/docs/git-send-email">git-send-email(1)</a>,
+but some configuration must be done beforehand. Add the following to your Git
+configuration file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">code</span><span class="p">::</span> <span class="n">sh</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p># cat .config/git/config
+[user]</p>
+<blockquote>
+<div><p>name = First Last
+email = <a class="reference external" href="mailto:x500&#37;&#52;&#48;umn&#46;edu">x500<span>&#64;</span>umn<span>&#46;</span>edu</a></p>
+</div></blockquote>
+<dl class="simple">
+<dt>[sendemail]</dt><dd><p>smtpServer = smtp.gmail.com
+smtpServerPort = 587
+smtpEncryption = tls
+smtpUser = <a class="reference external" href="mailto:x500&#37;&#52;&#48;umn&#46;edu">x500<span>&#64;</span>umn<span>&#46;</span>edu</a></p>
+</dd>
+</dl>
+</div></blockquote>
+<p>Patches can then be sent to a mailing list using:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">send</span><span class="o">-</span><span class="n">email</span> <span class="o">&lt;</span><span class="n">patch</span> <span class="n">file</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Before the email is sent out, you will be prompted to enter a mail
+password. Your standard UMN password will not work here. Instead, you must
+create a one-time-password (OTP) to send mail using
+<a class="reference external" href="https://git-scm.com/docs/git-send-email">git-send-email(1)</a>.
+Instructions on creating an OTP for your UMN account can be found
+<a class="reference external" href="https://docs.google.com/presentation/d/1IjUKb9kCIbKOGVrz4T-zBAUCBCYsclrqXDjEc0wRzwI/edit?usp=sharing">here</a>.
+Be sure to save this password for use during future patch submissions.</p>
+<p>If no errors arise, then the patch was sent successfully. You can verify this
+by looking for the email in your UMN Gmail <cite>Sent</cite> mailbox.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
