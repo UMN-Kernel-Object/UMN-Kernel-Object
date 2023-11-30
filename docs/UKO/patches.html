@@ -83,8 +83,8 @@
              
   <section id="code-patches">
 <h1>Code Patches<a class="headerlink" href="#code-patches" title="Permalink to this heading"></a></h1>
-<p>All code patches may be submitted to
-<a class="reference external" href="mailto:UKO-PATCHES&#37;&#52;&#48;lists&#46;umn&#46;edu">UKO-PATCHES<span>&#64;</span>lists<span>&#46;</span>umn<span>&#46;</span>edu</a> for review.
+<p>All code patches may be submitted to the
+<a class="reference external" href="mailto:UKO-PATCHES&#37;&#52;&#48;lists&#46;umn&#46;edu">UKO-PATCHES<span>&#64;</span>lists<span>&#46;</span>umn<span>&#46;</span>edu</a> mailing list for review.
 Before sending a patch, your UMN email must be subscribed to the list.
 You can do that <a class="reference external" href="https://lists.umn.edu/cgi-bin/wa?A0=UKO-PATCHES&amp;X=O363B529658766E8A03&amp;Y">here</a>.</p>
 <img alt="../_images/patches_sub.avif" src="../_images/patches_sub.avif" />
@@ -109,17 +109,19 @@ must be created using <a class="reference external" href="https://git-scm.com/do
 <a class="reference external" href="https://git-scm.com/docs/git-send-email">git-send-email(1)</a>,
 but some configuration must be done beforehand. Add the following to your Git
 configuration file:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">code</span><span class="p">::</span> <span class="n">sh</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">code</span><span class="o">-</span><span class="n">block</span><span class="p">::</span>
 </pre></div>
 </div>
 <blockquote>
-<div><p># cat .config/git/config
-[user]</p>
-<blockquote>
-<div><p>name = First Last
-email = <a class="reference external" href="mailto:x500&#37;&#52;&#48;umn&#46;edu">x500<span>&#64;</span>umn<span>&#46;</span>edu</a></p>
-</div></blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">caption<span class="colon">:</span></dt>
+<dd class="field-odd"><p>.config/git/config</p>
+</dd>
+</dl>
 <dl class="simple">
+<dt>[user]</dt><dd><p>name = First Last
+email = <a class="reference external" href="mailto:x500&#37;&#52;&#48;umn&#46;edu">x500<span>&#64;</span>umn<span>&#46;</span>edu</a></p>
+</dd>
 <dt>[sendemail]</dt><dd><p>smtpServer = smtp.gmail.com
 smtpServerPort = 587
 smtpEncryption = tls
