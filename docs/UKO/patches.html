@@ -109,35 +109,28 @@ must be created using <a class="reference external" href="https://git-scm.com/do
 <a class="reference external" href="https://git-scm.com/docs/git-send-email">git-send-email(1)</a>,
 but some configuration must be done beforehand. Add the following to your Git
 configuration file:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">code</span><span class="o">-</span><span class="n">block</span><span class="p">::</span>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">.config/git/config</span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">user</span><span class="p">]</span>
+  <span class="n">name</span> <span class="o">=</span> <span class="n">First</span> <span class="n">Last</span>
+  <span class="n">email</span> <span class="o">=</span> <span class="n">x500</span><span class="nd">@umn</span><span class="o">.</span><span class="n">edu</span>
+<span class="p">[</span><span class="n">sendemail</span><span class="p">]</span>
+  <span class="n">smtpServer</span> <span class="o">=</span> <span class="n">smtp</span><span class="o">.</span><span class="n">gmail</span><span class="o">.</span><span class="n">com</span>
+  <span class="n">smtpServerPort</span> <span class="o">=</span> <span class="mi">587</span>
+  <span class="n">smtpEncryption</span> <span class="o">=</span> <span class="n">tls</span>
+  <span class="n">smtpUser</span> <span class="o">=</span> <span class="n">x500</span><span class="nd">@umn</span><span class="o">.</span><span class="n">edu</span>
 </pre></div>
 </div>
-<blockquote>
-<div><dl class="field-list simple">
-<dt class="field-odd">caption<span class="colon">:</span></dt>
-<dd class="field-odd"><p>.config/git/config</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>[user]</dt><dd><p>name = First Last
-email = <a class="reference external" href="mailto:x500&#37;&#52;&#48;umn&#46;edu">x500<span>&#64;</span>umn<span>&#46;</span>edu</a></p>
-</dd>
-<dt>[sendemail]</dt><dd><p>smtpServer = smtp.gmail.com
-smtpServerPort = 587
-smtpEncryption = tls
-smtpUser = <a class="reference external" href="mailto:x500&#37;&#52;&#48;umn&#46;edu">x500<span>&#64;</span>umn<span>&#46;</span>edu</a></p>
-</dd>
-</dl>
-</div></blockquote>
+</div>
 <p>Patches can then be sent to a mailing list using:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">send</span><span class="o">-</span><span class="n">email</span> <span class="o">&lt;</span><span class="n">patch</span> <span class="n">file</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <p>Before the email is sent out, you will be prompted to enter a mail
 password. Your standard UMN password will not work here. Instead, you must
-create a one-time-password (OTP) to send mail using
+create an app password to send mail using
 <a class="reference external" href="https://git-scm.com/docs/git-send-email">git-send-email(1)</a>.
-Instructions on creating an OTP for your UMN account can be found
+Instructions on creating an app password for your UMN account can be found
 <a class="reference external" href="https://docs.google.com/presentation/d/1IjUKb9kCIbKOGVrz4T-zBAUCBCYsclrqXDjEc0wRzwI/edit?usp=sharing">here</a>.
 Be sure to save this password for use during future patch submissions.</p>
 <p>If no errors arise, then the patch was sent successfully. You can verify this
