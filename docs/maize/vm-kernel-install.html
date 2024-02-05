@@ -110,12 +110,12 @@ laptop&gt;&gt;<span class="w"> </span>ssh<span class="w"> </span>myx500@maize.cs
 <span class="c1"># If missing, ask an admin to run the command</span>
 &gt;&gt;<span class="w"> </span>sudo<span class="w"> </span>usermod<span class="w"> </span>-a<span class="w"> </span>-G<span class="w"> </span>kvm,libvirt-qemu,libvirt<span class="w"> </span>myusername
 
-<span class="c1"># Set environment variable, consider addin this line to ~/.profile so</span>
+<span class="c1"># Set environment variable, consider adding this line to ~/.profile so</span>
 <span class="c1"># it is set on each login</span>
 &gt;&gt;<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">LIBVIRT_DEFAULT_URI</span><span class="o">=</span>qemu:///session
 
-<span class="c1"># Copy Virtual Machine Image via kauffman&#39;s script; amounts to a</span>
-<span class="c1"># virt-clone with some files / options</span>
+<span class="c1"># Copy Virtual Machine Image via Kauffman&#39;s script; amounts to a</span>
+<span class="c1"># virt-clone with some files and options</span>
 &gt;&gt;<span class="w"> </span>~kauffman/vm-shares/clone-vm.sh
 
 <span class="c1"># Log in to Guest VM and experiment</span>
@@ -132,7 +132,7 @@ user@kerneldev:~$<span class="w"> </span>ls
 ...
 <span class="c1"># Check Guest VM kernel version</span>
 user@kerneldev:~$<span class="w"> </span>uname<span class="w"> </span>-a
-Linux<span class="w"> </span>kerneldev<span class="w"> </span><span class="m">5</span>.15.0-52-generic<span class="w"> </span><span class="c1">#58-Ubuntu SMP Thu Oct 13 08:03:55 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux</span>
+Linux<span class="w"> </span>kerneldev<span class="w"> </span><span class="m">5</span>.15.0-92-generic<span class="w"> </span><span class="c1">#102-Ubuntu SMP Wed Jan 10 09:33:48 UTC 2024 x86_64 x86_64 x86_64 GNU/Linux</span>
 
 <span class="c1"># Escape from VM via Ctrl-]</span>
 &gt;&gt;
@@ -143,17 +143,22 @@ Linux<span class="w"> </span>kerneldev<span class="w"> </span><span class="m">5<
 <span class="c1"># May need to press Enter to re-display prompt</span>
 user@kerneldev:~$
 
-<span class="c1"># Escape to VM or run `sudo shutdown now`</span>
+<span class="c1"># Escape VM or run `sudo shutdown now`</span>
 
-<span class="c1"># Ensure VM is shutdown before proceeding</span>
+<span class="c1"># Ensure VM is shut down before proceeding</span>
 &gt;&gt;<span class="w"> </span>virsh<span class="w"> </span>shutdown<span class="w"> </span>ubuntu22
 
 <span class="c1"># Mount VM image on host via guestmount</span>
 &gt;&gt;<span class="w"> </span>mkdir<span class="w"> </span><span class="nv">$HOME</span>/mnt
 &gt;&gt;<span class="w"> </span>guestmount<span class="w"> </span>-a<span class="w"> </span><span class="nv">$HOME</span>/.local/share/libvirt/images/ubuntu22.qcow2<span class="w"> </span>-i<span class="w"> </span><span class="nv">$HOME</span>/mnt
 
-<span class="c1"># Change to linux source tree (and build it if needed)</span>
+<span class="c1"># Clone linux kernel source from local copy on `maize`</span>
+&gt;&gt;<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>/srv/git/linux
+
+<span class="c1"># Change to linux source tree and build it</span>
 &gt;&gt;<span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="nv">$HOME</span>/linux
+&gt;&gt;<span class="w"> </span>make<span class="w"> </span>defconfig
+&gt;&gt;<span class="w"> </span>make<span class="w"> </span>-j<span class="w"> </span><span class="m">20</span>
 
 <span class="c1"># Install kernel with adjusted root directory</span>
 &gt;&gt;<span class="w"> </span>make<span class="w"> </span>install<span class="w"> </span><span class="nv">INSTALL_PATH</span><span class="o">=</span><span class="nv">$HOME</span>/mnt/boot
@@ -175,16 +180,16 @@ user@kerneldev:~$
 <span class="c1"># Check that files are listed properly in the /boot directory</span>
 user@kerneldev:~$<span class="w"> </span>ls<span class="w"> </span>/boot
 ...
-vmlinuz-5.15.0-52-generic<span class="w">                  </span><span class="c1"># old kernel</span>
-vmlinuz-6.1.0-rc2-00189-g23758867219c<span class="w">      </span><span class="c1"># fresh kernel</span>
+vmlinuz-5.15.0-92-generic<span class="w">                  </span><span class="c1"># old kernel</span>
+vmlinuz-6.8.0-rc3<span class="w">                          </span><span class="c1"># fresh kernel</span>
 ...
-System.map-5.15.0-52-generic<span class="w">               </span><span class="c1"># old kernel symbols</span>
-System.map-6.1.0-rc2-00189-g23758867219c<span class="w">   </span><span class="c1"># fresh symbols</span>
+System.map-5.15.0-59-generic<span class="w">               </span><span class="c1"># old kernel symbols</span>
+System.map-6.8.0-rc3<span class="w">                       </span><span class="c1"># fresh symbols</span>
 ...
-config-5.15.0-52-generic<span class="w">                   </span><span class="c1"># old config</span>
-config-6.1.0-rc2-00189-g23758867219c<span class="w">       </span><span class="c1"># fresh config</span>
+config-5.15.0-92-generic<span class="w">                   </span><span class="c1"># old config</span>
+config-6.8.0-rc3<span class="w">                           </span><span class="c1"># fresh config</span>
 ...
-initrd.img-5.15.0-52-generic<span class="w">               </span><span class="c1"># old initial ram disk</span>
+initrd.img-5.15.0-92-generic<span class="w">               </span><span class="c1"># old initial ram disk</span>
 <span class="c1"># need a fresh initial ramdisk</span>
 
 user@kerneldev:~$
@@ -213,19 +218,21 @@ update-initramfs:<span class="w"> </span>Generating<span class="w"> </span>/boot
 W:<span class="w"> </span>Possible<span class="w"> </span>missing<span class="w"> </span>firmware<span class="w"> </span>/lib/firmware/i915/dg1_huc.bin<span class="w"> </span><span class="k">for</span><span class="w"> </span>built-in<span class="w"> </span>driver<span class="w"> </span>i915
 ...<span class="w"> </span><span class="c1"># various other warnings</span>
 
-<span class="c1"># Update the boot loader (kernel selector)</span>
+<span class="c1"># Update the boot loader (lets us select kernel at boot)</span>
 user@kerneldev:~$<span class="w"> </span>sudo<span class="w"> </span>update-grub
 
 <span class="c1"># Reboot the guest vm</span>
 user@kerneldev:~$<span class="w"> </span>sudo<span class="w"> </span>reboot
 ....
 
-<span class="c1"># Grub menu should appear, select new kernel 6.1</span>
+<span class="c1"># Grub menu should appear, select new kernel 6.8</span>
 <span class="w">                             </span>GNU<span class="w"> </span>GRUB<span class="w">  </span>version<span class="w"> </span><span class="m">2</span>.06
 
 <span class="w"> </span>+----------------------------------------------------------------------------+
-<span class="w"> </span><span class="p">|</span>*Ubuntu,<span class="w"> </span>with<span class="w"> </span>Linux<span class="w"> </span><span class="m">6</span>.1.0-rc2-00189-g23758867219c<span class="w">                           </span><span class="p">|</span>
-<span class="w"> </span><span class="p">|</span><span class="w"> </span>Ubuntu,<span class="w"> </span>with<span class="w"> </span>Linux<span class="w"> </span><span class="m">6</span>.1.0-rc2-00189-g23758867219c<span class="w"> </span><span class="o">(</span>recovery<span class="w"> </span>mode<span class="o">)</span><span class="w">           </span><span class="p">|</span>
+<span class="w"> </span><span class="p">|</span>*Ubuntu,<span class="w"> </span>with<span class="w"> </span>Linux<span class="w"> </span><span class="m">6</span>.8.0-rc3<span class="w">                                               </span><span class="p">|</span>
+<span class="w"> </span><span class="p">|</span><span class="w"> </span>Ubuntu,<span class="w"> </span>with<span class="w"> </span>Linux<span class="w"> </span><span class="m">6</span>.8.0-rc3<span class="w"> </span><span class="o">(</span>recovery<span class="w"> </span>mode<span class="o">)</span><span class="w">                               </span><span class="p">|</span>
+<span class="w"> </span><span class="p">|</span><span class="w"> </span>Ubuntu,<span class="w"> </span>with<span class="w"> </span>Linux<span class="w"> </span><span class="m">5</span>.15.0-92-generic<span class="w">                                       </span><span class="p">|</span>
+<span class="w"> </span><span class="p">|</span><span class="w"> </span>Ubuntu,<span class="w"> </span>with<span class="w"> </span>Linux<span class="w"> </span><span class="m">5</span>.15.0-92-generic<span class="w"> </span><span class="o">(</span>recovery<span class="w"> </span>mode<span class="o">)</span><span class="w">                       </span><span class="p">|</span>
 <span class="w"> </span><span class="p">|</span><span class="w"> </span>Ubuntu,<span class="w"> </span>with<span class="w"> </span>Linux<span class="w"> </span><span class="m">5</span>.15.0-52-generic<span class="w">                                       </span><span class="p">|</span>
 <span class="w"> </span><span class="p">|</span><span class="w"> </span>Ubuntu,<span class="w"> </span>with<span class="w"> </span>Linux<span class="w"> </span><span class="m">5</span>.15.0-52-generic<span class="w"> </span><span class="o">(</span>recovery<span class="w"> </span>mode<span class="o">)</span><span class="w">                       </span><span class="p">|</span>
 <span class="w"> </span><span class="p">|</span><span class="w">                                                                            </span><span class="p">|</span>
@@ -247,14 +254,14 @@ password:<span class="w"> </span>linuxrocks
 
 <span class="c1"># Check that the new kernel is running</span>
 user@kerneldev:~$<span class="w"> </span>uname<span class="w"> </span>-a
-Linux<span class="w"> </span>kerneldev<span class="w"> </span><span class="m">6</span>.1.0-rc2-00189-g23758867219c<span class="w"> </span><span class="c1">#1 SMP PREEMPT_DYNAMIC Sat Oct 29 21:27:42 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux</span>
+Linux<span class="w"> </span>kerneldev<span class="w"> </span><span class="m">6</span>.8.0-rc3<span class="w"> </span><span class="c1">#1 SMP PREEMPT_DYNAMIC Sun Feb  4 20:59:48 CST 2024 x86_64 x86_64 x86_64 GNU/Linux</span>
 
 <span class="c1"># Press Ctrl-] to escape to host shell</span>
 &gt;&gt;
 
 <span class="c1"># Take a snapshot of the install</span>
-&gt;&gt;<span class="w"> </span>virsh<span class="w"> </span>snapshot-create-as<span class="w"> </span>ubuntu22<span class="w"> </span>kernel-61-installed
-Domain<span class="w"> </span>snapshot<span class="w"> </span>kernel-61-installed<span class="w"> </span>created
+&gt;&gt;<span class="w"> </span>virsh<span class="w"> </span>snapshot-create-as<span class="w"> </span>ubuntu22<span class="w"> </span>kernel-68-installed
+Domain<span class="w"> </span>snapshot<span class="w"> </span>kernel-68-installed<span class="w"> </span>created
 
 <span class="c1"># Congratulations!</span>
 </pre></div>
