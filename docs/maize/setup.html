@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -15,9 +15,9 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -82,20 +82,20 @@
            <div itemprop="articleBody">
              
   <section id="maize">
-<h1>Maize<a class="headerlink" href="#maize" title="Permalink to this heading"></a></h1>
+<h1>Maize<a class="headerlink" href="#maize" title="Link to this heading"></a></h1>
 <p>UKO has access to a desktop machine with constant uptime and modern
 specifications named Maize.</p>
 <p>It is highly recommended that all scheduler group members use Maize to avoid
 nuances in different GNU/Linux environments. Maize also includes all of the
 tools required to participate in scheduler development.</p>
 <section id="request-a-maize-account">
-<h2>Request a Maize Account<a class="headerlink" href="#request-a-maize-account" title="Permalink to this heading"></a></h2>
+<h2>Request a Maize Account<a class="headerlink" href="#request-a-maize-account" title="Link to this heading"></a></h2>
 <p>You must have an existing user account to access Maize. Contact
 <a class="reference external" href="mailto:kernel&#37;&#52;&#48;umn&#46;edu">kernel<span>&#64;</span>umn<span>&#46;</span>edu</a> with your student x500 to get access to
 your own user account.</p>
 </section>
 <section id="accessing-maize">
-<h2>Accessing Maize<a class="headerlink" href="#accessing-maize" title="Permalink to this heading"></a></h2>
+<h2>Accessing Maize<a class="headerlink" href="#accessing-maize" title="Link to this heading"></a></h2>
 <p>Maize may be accessed using the Secure Shell Protocol, or SSH. You can connect
 using:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ssh</span> <span class="p">[</span><span class="n">x500</span><span class="p">]</span><span class="nd">@cs</span><span class="o">-</span><span class="n">u</span><span class="o">-</span><span class="n">maize</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">umn</span><span class="o">.</span><span class="n">edu</span>
@@ -117,7 +117,7 @@ using:</p>
 change.</p>
 </section>
 <section id="convenience-suggestions">
-<h2>Convenience Suggestions<a class="headerlink" href="#convenience-suggestions" title="Permalink to this heading"></a></h2>
+<h2>Convenience Suggestions<a class="headerlink" href="#convenience-suggestions" title="Link to this heading"></a></h2>
 <p>You can simplify Maize login using this one-line command:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">X500</span><span class="o">=</span><span class="p">[</span><span class="n">x500</span><span class="p">]</span> <span class="n">printf</span> <span class="s2">&quot;Host maize</span><span class="se">\n\t</span><span class="s2">User</span><span class="se">\t\t</span><span class="s2">$</span><span class="si">{X500}</span><span class="se">\n\t</span><span class="s2">Hostname</span><span class="se">\t</span><span class="s2">cs-u-maize.cs.umn.edu&quot;</span> <span class="o">&gt;&gt;</span> <span class="o">~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">config</span>
 </pre></div>

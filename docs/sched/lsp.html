@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -15,9 +15,9 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -83,18 +83,18 @@
            <div itemprop="articleBody">
              
   <section id="language-server-protocol">
-<h1>Language Server Protocol<a class="headerlink" href="#language-server-protocol" title="Permalink to this heading"></a></h1>
+<h1>Language Server Protocol<a class="headerlink" href="#language-server-protocol" title="Link to this heading"></a></h1>
 <p>The Language Server Protocol (LSP) is an open protocol that allows for easy
 code completion, real-time compiler linting, and much more.</p>
 <section id="clangd">
-<h2>clangd<a class="headerlink" href="#clangd" title="Permalink to this heading"></a></h2>
+<h2>clangd<a class="headerlink" href="#clangd" title="Link to this heading"></a></h2>
 <p>There are LSP servers for nearly every mainstream programming language, but
 we’re going to be using the C LSP implementation, <cite>clangd</cite>. Follow
 <a class="reference external" href="https://clangd.llvm.org/installation.html">this guide</a> to install and setup
 <cite>clangd</cite> in your programming environment.</p>
 </section>
 <section id="jump-to-definition">
-<h2>Jump to Definition<a class="headerlink" href="#jump-to-definition" title="Permalink to this heading"></a></h2>
+<h2>Jump to Definition<a class="headerlink" href="#jump-to-definition" title="Link to this heading"></a></h2>
 <p>One of the most useful features of LSP is its <cite>jump-to-definition</cite> feature.
 If you use VSCode: hover over any function, structure, or variable and
 <cite>&lt;Ctrl - Left Click&gt;</cite> (<cite>&lt;Cmd - Left Click&gt;</cite> on macOS). This will jump to the

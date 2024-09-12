@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -15,9 +15,9 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -82,9 +82,9 @@
            <div itemprop="articleBody">
              
   <section id="creating-a-simple-encryption-module">
-<h1>Creating a Simple Encryption Module<a class="headerlink" href="#creating-a-simple-encryption-module" title="Permalink to this heading"></a></h1>
+<h1>Creating a Simple Encryption Module<a class="headerlink" href="#creating-a-simple-encryption-module" title="Link to this heading"></a></h1>
 <section id="synopsis">
-<h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this heading"></a></h2>
+<h2>Synopsis<a class="headerlink" href="#synopsis" title="Link to this heading"></a></h2>
 <p>This tutorial discusses the implementation of a kernel module that performs
 encryption of text using a very simple Caesar cipher. Be aware that referring to
 a Caesar cipher as an encryption mechanism is a charitable characterization, as
@@ -94,7 +94,7 @@ that you will encounter repeatedly in kernel development: dynamically allocating
 memory, using pre-defined kernel structures, and basic input/output.</p>
 </section>
 <section id="preliminaries">
-<h2>Preliminaries<a class="headerlink" href="#preliminaries" title="Permalink to this heading"></a></h2>
+<h2>Preliminaries<a class="headerlink" href="#preliminaries" title="Link to this heading"></a></h2>
 <p>This tutorial assumes you already have a working virtual machine set up on our
 <code class="docutils literal notranslate"><span class="pre">maize</span></code> server, that you are able to compile, install, and boot your own
 kernel on this virtual machine, and that you have worked through the “Hello,
@@ -102,7 +102,7 @@ World!” module tutorial. Refer back to those tutorials if you need a refresher
 on those topics.</p>
 </section>
 <section id="obtaining-the-source-code">
-<h2>Obtaining the Source Code<a class="headerlink" href="#obtaining-the-source-code" title="Permalink to this heading"></a></h2>
+<h2>Obtaining the Source Code<a class="headerlink" href="#obtaining-the-source-code" title="Link to this heading"></a></h2>
 <p>First, you will need to obtain the source code for our Caesar cipher kernel
 module. You should already have a remote set up to access our git repository
 hosted locally on maize. That is, you should see something like the following in
@@ -128,7 +128,7 @@ master
 </div>
 </section>
 <section id="walking-through-the-source-code">
-<h2>Walking Through the Source Code<a class="headerlink" href="#walking-through-the-source-code" title="Permalink to this heading"></a></h2>
+<h2>Walking Through the Source Code<a class="headerlink" href="#walking-through-the-source-code" title="Link to this heading"></a></h2>
 <p>Like the previous “Hello, World!” module, this branch includes a few changes to
 the upstream Linux kernel source. It adds a new directory,
 <code class="docutils literal notranslate"><span class="pre">drivers/staging/caesar</span></code> and adds the necessary Makefiles and Kconfig files to
@@ -139,7 +139,7 @@ not be discussed in detail here.</p>
 code than we saw for the “Hello, World!” module, although the general structure
 remains the same.</p>
 <section id="debugfs-and-the-file-interface">
-<h3>debugfs and the File Interface<a class="headerlink" href="#debugfs-and-the-file-interface" title="Permalink to this heading"></a></h3>
+<h3>debugfs and the File Interface<a class="headerlink" href="#debugfs-and-the-file-interface" title="Link to this heading"></a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">caesar</span></code> module uses a feature of the Linux kernel known as debugfs.
 Briefly, debugfs allows kernel developers to provide information and
 functionality accessible as “files” under <code class="docutils literal notranslate"><span class="pre">/sys/kernel/debug</span></code>. One can
@@ -157,7 +157,7 @@ no memory, i.e., it will only retain encrypted text for the most recently
 written plaintext.</p>
 </section>
 <section id="module-init-and-exit">
-<h3>Module Init and Exit<a class="headerlink" href="#module-init-and-exit" title="Permalink to this heading"></a></h3>
+<h3>Module Init and Exit<a class="headerlink" href="#module-init-and-exit" title="Link to this heading"></a></h3>
 <p>Just like in our simple “Hello, World!” module, the <code class="docutils literal notranslate"><span class="pre">module_init</span></code> and
 <code class="docutils literal notranslate"><span class="pre">module_exit</span></code> macros at the end of <code class="docutils literal notranslate"><span class="pre">caesar.c</span></code> specify which functions are
 invoked when the module is initialized and when it exits.</p>
@@ -189,7 +189,7 @@ operations. Here, we have a minimal file definition that only supports basic
 reading and writing.</p>
 </section>
 <section id="writing-plaintext">
-<h3>Writing Plaintext<a class="headerlink" href="#writing-plaintext" title="Permalink to this heading"></a></h3>
+<h3>Writing Plaintext<a class="headerlink" href="#writing-plaintext" title="Link to this heading"></a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">write_caesar</span></code> function is invoked whenever the <code class="docutils literal notranslate"><span class="pre">encrypt</span></code> debugfs file
 is written to, thanks to our setup during module initialization. Our goal is to
 take a body of text provided by the user, encrypt it using a Caesar cipher, and
@@ -254,7 +254,7 @@ the length of the ciphertext. This corresponds to the expected return value of a
 <code class="docutils literal notranslate"><span class="pre">write</span></code> system call in Unix.</p>
 </section>
 <section id="reading-ciphertext">
-<h3>Reading Ciphertext<a class="headerlink" href="#reading-ciphertext" title="Permalink to this heading"></a></h3>
+<h3>Reading Ciphertext<a class="headerlink" href="#reading-ciphertext" title="Link to this heading"></a></h3>
 <p>Most of the heavy lifting happens with a write. Reading from the
 <code class="docutils literal notranslate"><span class="pre">caesar/encrypt</span></code> debugfs file is relatively simple.</p>
 <p>We first verify that <code class="docutils literal notranslate"><span class="pre">ppos</span></code> is <code class="docutils literal notranslate"><span class="pre">0</span></code> as we did for a write. Then, we use the
@@ -271,7 +271,7 @@ to the expected return value of a <code class="docutils literal notranslate"><sp
 </section>
 </section>
 <section id="testing-the-module">
-<h2>Testing the Module<a class="headerlink" href="#testing-the-module" title="Permalink to this heading"></a></h2>
+<h2>Testing the Module<a class="headerlink" href="#testing-the-module" title="Link to this heading"></a></h2>
 <p>Note that you will need to make the following changes to the <code class="docutils literal notranslate"><span class="pre">.config</span></code> file in
 your Linux repository:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">CONFIG_STAGING</span><span class="o">=</span>y
@@ -302,7 +302,7 @@ want to add some error checking for easier debugging.</p>
 </div>
 </section>
 <section id="what-s-next">
-<h2>What’s Next?<a class="headerlink" href="#what-s-next" title="Permalink to this heading"></a></h2>
+<h2>What’s Next?<a class="headerlink" href="#what-s-next" title="Link to this heading"></a></h2>
 <p>There are lots of things you might try to do from here. Here are a couple of
 ideas:</p>
 <ul class="simple">
