@@ -1,0 +1,315 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Building and Booting a Linux kernel on Maize &mdash; UMN Kernel Object  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=7ab3649f" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Kernel Install in VM" href="vm-kernel-install.html" />
+    <link rel="prev" title="Maize" href="setup.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            UMN Kernel Object
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../UKO/index.html">UKO General</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Maize information</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="setup.html">Maize</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Building and Booting a Linux kernel on Maize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vm-kernel-install.html">Kernel Install in VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../rust/index.html">Rust Subgroup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sched/index.html">Schedulers Subgroup Intro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../virtmem/index.html">Virtual Memory Subgroup</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">UMN Kernel Object</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Maize information</a></li>
+      <li class="breadcrumb-item active">Building and Booting a Linux kernel on Maize</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/maize/building-and-booting.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="building-and-booting-a-linux-kernel-on-maize">
+<h1>Building and Booting a Linux kernel on Maize<a class="headerlink" href="#building-and-booting-a-linux-kernel-on-maize" title="Link to this heading"></a></h1>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">Author<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Nathan Ringo</p>
+</dd>
+</dl>
+</div></blockquote>
+<section id="synopsis">
+<h2>Synopsis<a class="headerlink" href="#synopsis" title="Link to this heading"></a></h2>
+<p>This document is a tutorial about how to get the Linux kernel sources on Maize, how to build them, and how to access a VM using the just-built kernel.
+It then proceeds to cover how to configure the kernel, and use this to build a kernel with a “Hello, World!” kernel module.</p>
+</section>
+<section id="tutorial">
+<h2>Tutorial<a class="headerlink" href="#tutorial" title="Link to this heading"></a></h2>
+<p>First, check that you can log into Maize and that your user has the right permissions on it.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Log in to Maize. Your command might be different if you created an alias</span>
+<span class="c1"># for it in ~/.ssh/config</span>
+user@laptop:~$<span class="w"> </span>ssh<span class="w"> </span>myx500@cs-u-maize.cs.umn.edu
+
+<span class="c1"># Check what groups your user is in. You need to be in the kvm group to run</span>
+<span class="c1"># hardware-accelerated VMs. Without this, your VM will run _really_ slowly.</span>
+myx500@cs-u-maize.cs.umn.edu:~$<span class="w"> </span>groups
+...<span class="w"> </span>kvm<span class="w"> </span>...
+</pre></div>
+</div>
+<p>If your user does not have the <code class="docutils literal notranslate"><span class="pre">kvm</span></code> group, please contact an officer.</p>
+<p>Next, make a clone of the kernel Git repo.
+To save network bandwidth, we have a copy of the kernel’s Git repo on Maize already, which you should clone.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Clone the repo. This will clone it to the current working directory, as a</span>
+<span class="c1"># directory named linux. You can clone it to a different directory or move</span>
+<span class="c1"># it after cloning it if you would prefer it to be elsewhere.</span>
+myx500@cs-u-maize.cs.umn.edu:~$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>/srv/git/linux
+
+<span class="c1"># Once the kernel is cloned, cd into it before proceeding to the following</span>
+<span class="c1"># steps.</span>
+myx500@cs-u-maize.cs.umn.edu:~$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>linux
+</pre></div>
+</div>
+<p>If, when cloning the repo, you get an error like the following, run the command from the error:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>myx500@cs-u-maize.cs.umn.edu:~$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>/srv/git/linux
+Cloning<span class="w"> </span>into<span class="w"> </span><span class="s1">&#39;linux&#39;</span>...
+fatal:<span class="w"> </span>detected<span class="w"> </span>dubious<span class="w"> </span>ownership<span class="w"> </span><span class="k">in</span><span class="w"> </span>repository<span class="w"> </span>at<span class="w"> </span><span class="s1">&#39;/srv/git/linux/.git&#39;</span>
+To<span class="w"> </span>add<span class="w"> </span>an<span class="w"> </span>exception<span class="w"> </span><span class="k">for</span><span class="w"> </span>this<span class="w"> </span>directory,<span class="w"> </span>call:
+
+<span class="w">        </span>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>--add<span class="w"> </span>safe.directory<span class="w"> </span>/srv/git/linux/.git
+fatal:<span class="w"> </span>Could<span class="w"> </span>not<span class="w"> </span><span class="nb">read</span><span class="w"> </span>from<span class="w"> </span>remote<span class="w"> </span>repository.
+
+Please<span class="w"> </span>make<span class="w"> </span>sure<span class="w"> </span>you<span class="w"> </span>have<span class="w"> </span>the<span class="w"> </span>correct<span class="w"> </span>access<span class="w"> </span>rights
+and<span class="w"> </span>the<span class="w"> </span>repository<span class="w"> </span>exists.
+
+myx500@cs-u-maize.cs.umn.edu:~$<span class="w"> </span>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>--add<span class="w"> </span>safe.directory<span class="w"> </span>/srv/git/linux/.git
+
+<span class="c1"># After running the command, re-run git clone.</span>
+myx500@cs-u-maize.cs.umn.edu:~$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>/srv/git/linux
+</pre></div>
+</div>
+<p>We’re using a tool called <a class="reference external" href="https://github.com/arighi/virtme-ng">virtme-ng</a> to automate the process of building the kernel and starting a VM containing it.
+Each of these two steps is a single command.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Make sure that you&#39;ve cd&#39;d into the kernel repo. This command builds the</span>
+<span class="c1"># kernel, using a minimal default configuration that will build quickly and</span>
+<span class="c1"># work for these steps. Later, we&#39;ll see how you can adjust the</span>
+<span class="c1"># configuration.</span>
+myx500@cs-u-maize.cs.umn.edu:~/linux$<span class="w"> </span>vng<span class="w"> </span>--verbose<span class="w"> </span>--build
+
+<span class="c1"># This command boots a virtual machine that has access to your home</span>
+<span class="c1"># directory.</span>
+myx500@cs-u-maize.cs.umn.edu:~/linux$<span class="w"> </span>vng<span class="w"> </span>--verbose
+</pre></div>
+</div>
+<p>After launching the virtual machine, you should be in the same directory, but the hostname should display as <code class="docutils literal notranslate"><span class="pre">virtme-ng</span></code>.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># This command is now running in the virtual machine.</span>
+myx500@virtme-ng:~/linux$<span class="w"> </span>uname<span class="w"> </span>-a
+Linux<span class="w"> </span>virtme-ng<span class="w"> </span><span class="m">6</span>.12.0-rc1-virtme<span class="w"> </span><span class="c1">#1 SMP PREEMPT_DYNAMIC Sat Oct  5 19:44:31 CDT 2024 x86_64 x86_64 x86_64 GNU/Linux</span>
+</pre></div>
+</div>
+<p>You can exit out of the virtual machine by exiting the shell, either with the <code class="docutils literal notranslate"><span class="pre">exit</span></code> shell built-in or with the <kbd class="kbd compound docutils literal notranslate"><kbd class="kbd docutils literal notranslate">Ctrl</kbd>+<kbd class="kbd docutils literal notranslate">D</kbd></kbd> keypress <a class="footnote-reference brackets" href="#ctrld" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
+<p>Now that we have the kernel working, we can see how to modify and configure it.
+In this tutorial, we won’t cover the process of authoring a new kernel module.
+Instead, we’ll use a “Hello, World!” module that’s already been written.
+This module is present on a branch in the kernel repo on Maize.</p>
+<p>Switch to the branch with the module on it.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>myx500@cs-u-maize.cs.umn.edu:~/linux$<span class="w"> </span>git<span class="w"> </span>switch<span class="w"> </span>hello_module
+branch<span class="w"> </span><span class="s1">&#39;hello_module&#39;</span><span class="w"> </span><span class="nb">set</span><span class="w"> </span>up<span class="w"> </span>to<span class="w"> </span>track<span class="w"> </span><span class="s1">&#39;origin/hello_module&#39;</span>.
+Switched<span class="w"> </span>to<span class="w"> </span>a<span class="w"> </span>new<span class="w"> </span>branch<span class="w"> </span><span class="s1">&#39;hello_module&#39;</span>
+</pre></div>
+</div>
+<p>This branch adds a new module named <code class="docutils literal notranslate"><span class="pre">hello_world</span></code>. This module’s purpose is
+to print the string <code class="docutils literal notranslate"><span class="pre">Hello,</span> <span class="pre">World!</span></code> when the module is loaded and to print
+the string <code class="docutils literal notranslate"><span class="pre">Goodbye,</span> <span class="pre">World!</span></code> when the module is removed.</p>
+<p>A module is a unit of code that can be dynamically loaded or removed from the
+kernel at runtime, rather than at compile time. This is often useful with
+device drivers, as it allows the kernel to load only the drivers it needs for
+the specific hardware configuration on which it is running, leaving out drivers
+for irrelevant devices. The module in this tutorial can be viewed as a trivial
+device driver.</p>
+<p>Most of the relevant code for this tutorial is in the
+<code class="docutils literal notranslate"><span class="pre">drivers/staging/hello_world</span></code> subdirectory of the kernel tree. Feel free to
+go to this directory and browse its files with the editor of your choice. A few
+items of note are summarized below.</p>
+<section id="hello-world-c">
+<h3>hello_world.c<a class="headerlink" href="#hello-world-c" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The functions <code class="docutils literal notranslate"><span class="pre">hello_world_init</span></code> and <code class="docutils literal notranslate"><span class="pre">hello_world_exit</span></code> will be called
+when this kernel module is loaded and removed, respectively.</p></li>
+<li><p>Kernel code doesn’t use <code class="docutils literal notranslate"><span class="pre">printf</span></code> as you are likely accustomed to from
+userspace C programs. Instead, it uses the <code class="docutils literal notranslate"><span class="pre">printk</span></code> function, which has a
+generally similar usage.</p></li>
+<li><p>A few macros are used at the bottom of the C file to specify the description,
+author, and license for the module. These are required for any well-formed
+module in the kernel codebase.</p></li>
+</ul>
+</section>
+<section id="makefile">
+<h3>Makefile<a class="headerlink" href="#makefile" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">SPDX-License-Identifier</span></code> (also included in the C source) specifies the
+license for this code. It is a useful shorthand that is used in place of
+reproducing the full text of the license (here, GPL Version 2). Licensing is
+an important issue in open-source software development that is beyond the
+scope of this tutorial.</p></li>
+<li><p>The second line of this file integrates our module with the larger kernel
+configuration system (discussed below).</p></li>
+</ul>
+<p>Like many kernel modules, the <code class="docutils literal notranslate"><span class="pre">hello_world</span></code> module will only get built if the
+appropriate option is set in the kernel’s build-time configuration. The
+kernel’s build-time configuration is stored in a file named <code class="docutils literal notranslate"><span class="pre">.config</span></code>
+<a class="footnote-reference brackets" href="#dotfile" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
+<p>You can run <code class="docutils literal notranslate"><span class="pre">less</span></code> to view the file’s contents, which should be a minimal configuration that virtme-ng came up with when you first built the kernel.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># You can scroll in less with the arrow keys, or the j and k keys. You can</span>
+<span class="c1"># exit less with the q key.</span>
+myx500@cs-u-maize.cs.umn.edu:~/linux$<span class="w"> </span>less<span class="w"> </span>.config
+</pre></div>
+</div>
+<p>While it is possible to edit the <code class="docutils literal notranslate"><span class="pre">.config</span></code> file by hand, the Linux kernel comes with several tools to make it more convenient to edit the configuration.
+The one we’ll be using is <code class="docutils literal notranslate"><span class="pre">menuconfig</span></code>, which has a menu-driven interface for configuring the kernel.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># This will compile menuconfig if necessary, then run it.</span>
+myx500@cs-u-maize.cs.umn.edu:~/linux$<span class="w"> </span>make<span class="w"> </span>menuconfig
+</pre></div>
+</div>
+<p>After running the above command, your terminal should be displaying a menu with a blue background.
+There are two configuration options we want to enable.</p>
+<p>The first configuration option to enable is <code class="docutils literal notranslate"><span class="pre">CONFIG_STAGING</span></code>.
+This enables building drivers that are marked as not yet being ready for release in the main Linux kernel, but are still in the repo for users willing to try them out.
+Most new drivers enter the kernel as staging drivers, so we’ve marked our <code class="docutils literal notranslate"><span class="pre">hello_world</span></code> module as one.</p>
+<p>Use the arrow keys to navigate to the <code class="docutils literal notranslate"><span class="pre">Device</span> <span class="pre">Drivers</span></code> option, then hit <kbd class="kbd docutils literal notranslate">Enter</kbd> to enter that submenu.
+Then, scroll until you find the <code class="docutils literal notranslate"><span class="pre">Staging</span> <span class="pre">drivers</span></code> option, then hit <kbd class="kbd docutils literal notranslate">Space</kbd> to enable it.</p>
+<p>The second option we want to enable is <code class="docutils literal notranslate"><span class="pre">CONFIG_HELLO_WORLD</span></code>, which enables our driver.</p>
+<p>With the cursor still on <code class="docutils literal notranslate"><span class="pre">Staging</span> <span class="pre">drivers</span></code>, hit <kbd class="kbd docutils literal notranslate">Enter</kbd> to enter the submenu for staging drivers.
+Then, scroll to the <code class="docutils literal notranslate"><span class="pre">'Hello,</span> <span class="pre">World!'</span> <span class="pre">Driver</span></code> option and hit <kbd class="kbd docutils literal notranslate">Space</kbd>.
+This should make the field next to it go from <code class="docutils literal notranslate"><span class="pre">&lt;</span> <span class="pre">&gt;</span></code> (indicating that the module will not be built) to <code class="docutils literal notranslate"><span class="pre">&lt;M&gt;</span></code> (indicating that the module will be built, but kept as a <code class="docutils literal notranslate"><span class="pre">.ko</span></code> file separately from the rest of the kernel).
+Hit <kbd class="kbd docutils literal notranslate">Space</kbd> again to make it go from <code class="docutils literal notranslate"><span class="pre">&lt;M&gt;</span></code> to <code class="docutils literal notranslate"><span class="pre">&lt;*&gt;</span></code>, which indicates that the module will be built and linked into the rest of the kernel.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Device</span> <span class="n">Drivers</span> <span class="o">---&gt;</span>
+  <span class="p">[</span><span class="o">*</span><span class="p">]</span> <span class="n">Staging</span> <span class="n">drivers</span> <span class="o">---&gt;</span>
+    <span class="o">&lt;*&gt;</span> <span class="s1">&#39;Hello, World!&#39;</span> <span class="n">Driver</span>
+</pre></div>
+</div>
+<p>Hit <kbd class="kbd docutils literal notranslate">Esc</kbd> twice to go up a menu level to the <code class="docutils literal notranslate"><span class="pre">Staging</span> <span class="pre">drivers</span></code> menu, then four more times to get to the main menu.</p>
+<p>Hit <kbd class="kbd docutils literal notranslate">Esc</kbd> twice more to exit.
+<code class="docutils literal notranslate"><span class="pre">menuconfig</span></code> will prompt you, asking if you want to save your changes.
+Press <kbd class="kbd docutils literal notranslate">Enter</kbd> to save them.</p>
+<p>We’ve now configured our kernel.
+We can use virtme-ng again to build it.
+Notice how this time, the build is much faster, since we can re-use almost all of the output files from the previous build.
+You should also be able to see a line from compiling the <code class="docutils literal notranslate"><span class="pre">hello_world</span></code> driver.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>myx500@cs-u-maize.cs.umn.edu:~/linux$<span class="w"> </span>vng<span class="w"> </span>--verbose<span class="w"> </span>--build
+<span class="o">[</span>...<span class="o">]</span>
+<span class="w">  </span>CC<span class="w">      </span>drivers/staging/hello_world/hello_world.o
+<span class="o">[</span>...<span class="o">]</span>
+</pre></div>
+</div>
+<p>You can use virtme-ng again to boot the kernel, too.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>myx500@cs-u-maize.cs.umn.edu:~/linux$<span class="w"> </span>vng<span class="w"> </span>--verbose
+</pre></div>
+</div>
+<p>Our driver just prints <code class="docutils literal notranslate"><span class="pre">Hello,</span> <span class="pre">World!</span></code> as the kernel boots.
+We can see the kernel logs with the <code class="docutils literal notranslate"><span class="pre">dmesg</span></code> command, and pipe them through the <code class="docutils literal notranslate"><span class="pre">grep</span></code> command to search for ones that include “Hello”.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>myx500@virtme-ng:~/linux$<span class="w"> </span>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Hello
+<span class="o">[</span><span class="w">    </span><span class="m">0</span>.257566<span class="o">]</span><span class="w"> </span>Hello,<span class="w"> </span>World!
+</pre></div>
+</div>
+</section>
+</section>
+<section id="next-steps">
+<h2>Next steps<a class="headerlink" href="#next-steps" title="Link to this heading"></a></h2>
+<p>Now that you’ve seen how to configure, build, and boot a Linux kernel, you’re prepared to actually modify the code of the kernel, for example by adding a new kernel module.</p>
+<p>The next group meeting that includes a tutorial should teach you about the basics of kernel programming, so you can start to make your own changes to the kernel’s code.</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="ctrld" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>If there’s extra time, discussing why <kbd class="kbd compound docutils literal notranslate"><kbd class="kbd docutils literal notranslate">Ctrl</kbd>+<kbd class="kbd docutils literal notranslate">D</kbd></kbd> causes the shell (and many other programs) to exit is worthwhile, and cuts a neat slice through some parts of Unix and Linux that aren’t always well-covered by our operating systems courses.</p>
+</aside>
+<aside class="footnote brackets" id="dotfile" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>This file won’t show up if you just run <code class="docutils literal notranslate"><span class="pre">ls</span></code>, because its name starts with a <code class="docutils literal notranslate"><span class="pre">.</span></code>. By convention, most Unix programs treat files whose names start with <code class="docutils literal notranslate"><span class="pre">.</span></code> as hidden files. The <code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">-a</span></code> command will show hidden files as well.</p>
+</aside>
+</aside>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="setup.html" class="btn btn-neutral float-left" title="Maize" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="vm-kernel-install.html" class="btn btn-neutral float-right" title="Kernel Install in VM" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
