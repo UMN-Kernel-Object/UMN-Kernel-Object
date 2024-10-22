@@ -1,0 +1,346 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Creating a simple kernel module &mdash; UMN Kernel Object  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Kernel Install in VM" href="vm-kernel-install.html" />
+    <link rel="prev" title="Building and Booting a Linux kernel on Maize" href="building-and-booting.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            UMN Kernel Object
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../UKO/index.html">UKO General</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Maize information</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="setup.html">Maize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="building-and-booting.html">Building and Booting a Linux kernel on Maize</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Creating a simple kernel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vm-kernel-install.html">Kernel Install in VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../rust/index.html">Rust Subgroup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sched/index.html">Schedulers Subgroup Intro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../virtmem/index.html">Virtual Memory Subgroup</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">UMN Kernel Object</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Maize information</a></li>
+      <li class="breadcrumb-item active">Creating a simple kernel module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/maize/caesar.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="creating-a-simple-kernel-module">
+<h1>Creating a simple kernel module<a class="headerlink" href="#creating-a-simple-kernel-module" title="Link to this heading"></a></h1>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">Author<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Nathan Ringo, Jack Kolb</p>
+</dd>
+</dl>
+</div></blockquote>
+<section id="synopsis">
+<h2>Synopsis<a class="headerlink" href="#synopsis" title="Link to this heading"></a></h2>
+<p>This document discusses the implementation of a kernel module that performs encryption of text using a very simple Caesar cipher.
+The goal of this document is to demonstrate how to perform a number of tasks you will encounter repeatedly in kernel development: dynamically allocating memory, using pre-defined kernel structures, and performing basic input and output.</p>
+<p>This document assumes that you’ve read <a class="reference internal" href="building-and-booting.html"><span class="doc">Building and Booting a Linux kernel on Maize</span></a>.</p>
+</section>
+<section id="obtaining-the-source-code">
+<h2>Obtaining the Source Code<a class="headerlink" href="#obtaining-the-source-code" title="Link to this heading"></a></h2>
+<p>First, you will need to obtain the source code for our Caesar cipher kernel module.
+You should already have a remote set up to access our git repository hosted locally on maize.
+That is, you should see something like the following in your Linux source tree:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check the remotes of your kernel repo.</span>
+myx500@cs-u-maize.cs.umn.edu:~/linux$<span class="w"> </span>git<span class="w"> </span>remote<span class="w"> </span>-v
+origin<span class="w">      </span>/srv/git/linux<span class="w"> </span><span class="o">(</span>fetch<span class="o">)</span>
+origin<span class="w">      </span>/srv/git/linux<span class="w"> </span><span class="o">(</span>push<span class="o">)</span>
+</pre></div>
+</div>
+<p>Next, we’ll fetch any new refs from the <code class="docutils literal notranslate"><span class="pre">maize</span></code> remote and switch to the <code class="docutils literal notranslate"><span class="pre">caesar</span></code> branch available from that remote.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get any new refs from origin. You could also write this as `git fetch`,</span>
+<span class="c1"># since Git will default to using origin if no remote is specified. You may</span>
+<span class="c1"># also wish to use `git fetch --all` if you have multiple remotes to fetch</span>
+<span class="c1"># from all of them.</span>
+myx500@cs-u-maize.cs.umn.edu:~/linux$<span class="w"> </span>git<span class="w"> </span>fetch<span class="w"> </span>origin
+origin<span class="w">      </span>/srv/git/linux<span class="w"> </span><span class="o">(</span>fetch<span class="o">)</span>
+origin<span class="w">      </span>/srv/git/linux<span class="w"> </span><span class="o">(</span>push<span class="o">)</span>
+
+<span class="c1"># Create a new branch named caesar that tracks origin/caesar, so that it</span>
+<span class="c1"># starts at the current state of origin/caesar.</span>
+myx500@cs-u-maize.cs.umn.edu:~/linux$<span class="w"> </span>git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </span>caesar<span class="w"> </span>origin/caesar
+Updating<span class="w"> </span>files:<span class="w"> </span><span class="m">100</span>%<span class="w"> </span><span class="o">(</span><span class="m">32627</span>/32627<span class="o">)</span>,<span class="w"> </span><span class="k">done</span>.
+branch<span class="w"> </span><span class="s1">&#39;caesar&#39;</span><span class="w"> </span><span class="nb">set</span><span class="w"> </span>up<span class="w"> </span>to<span class="w"> </span>track<span class="w"> </span><span class="s1">&#39;origin/caesar&#39;</span>.
+Switched<span class="w"> </span>to<span class="w"> </span>a<span class="w"> </span>new<span class="w"> </span>branch<span class="w"> </span><span class="s1">&#39;caesar&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="walking-through-the-source-code">
+<h2>Walking Through the Source Code<a class="headerlink" href="#walking-through-the-source-code" title="Link to this heading"></a></h2>
+<p>Like the previous “Hello, World!” module, this branch includes a few changes to the upstream Linux kernel source.
+It adds a new directory, <code class="docutils literal notranslate"><span class="pre">drivers/staging/caesar</span></code>, and adds the necessary Makefiles and Kconfig files to integrate this new directory into the larger kernel configuration system.
+Most of these changes are identical in nature to the “Hello, World!” module and will not be discussed in detail here.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">caesar.c</span></code> file is the main point of interest.
+It has quite a bit more code than we saw for the “Hello, World!” module, although the general structure remains the same.</p>
+<section id="debugfs-and-the-file-interface">
+<h3>debugfs and the File Interface<a class="headerlink" href="#debugfs-and-the-file-interface" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">caesar</span></code> module uses a feature of the Linux kernel known as debugfs.
+Briefly, debugfs allows kernel developers to provide information and functionality accessible as “files” under <code class="docutils literal notranslate"><span class="pre">/sys/kernel/debug</span></code>.
+One can interact with these files by opening, reading, and writing as one would do with any normal file.
+However, unlike traditional files, which represent a sequence of bytes stored persistently on disk, debugfs files are much more flexible.
+Reading a debugfs file might return the contents of a specific location in memory, for example.
+You should therefore think of reads and writes against debugfs files more as invocations against an API rather than direct reads and writes to the contents of a disk.</p>
+<p>In our particular module, writing a chunk of text to the associated debugfs file will encrypt that text using a Caesar cipher.
+Reading from the file will return ciphertext (encrypted text) back to the reader.
+Note that our module will have no memory, i.e., it will only retain encrypted text for the most recently written plaintext.</p>
+</section>
+<section id="module-init-and-exit">
+<h3>Module Init and Exit<a class="headerlink" href="#module-init-and-exit" title="Link to this heading"></a></h3>
+<p>Just like in our simple “Hello, World!” module, the <code class="docutils literal notranslate"><span class="pre">module_init</span></code> and <code class="docutils literal notranslate"><span class="pre">module_exit</span></code> macros at the end of <code class="docutils literal notranslate"><span class="pre">caesar.c</span></code> specify which functions are invoked when the module is initialized and when it exits.</p>
+<p>When our module is initialized, we need to create a new debugfs file to be made available to the user.
+First, we create a <code class="docutils literal notranslate"><span class="pre">caesar</span></code> directory, then we create a file named <code class="docutils literal notranslate"><span class="pre">encrypt</span></code> within that directory.
+This means our encryption system will be accessible to the user through reads and writes to the file <code class="docutils literal notranslate"><span class="pre">/sys/kernel/debug/caesar/encrypt</span></code>.</p>
+<p>If you’ve taken an operating systems class, you may remember that nodes in the file system’s tree correspond to entries in a hierarchical system of directories.
+The module initialization code creates directory entries for the <code class="docutils literal notranslate"><span class="pre">caesar</span></code> directory and for the <code class="docutils literal notranslate"><span class="pre">encrypt</span></code> file, both represented as instances of <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dentry</span></code>.
+Note that the directory entry for the <code class="docutils literal notranslate"><span class="pre">caesar</span></code> file is saved as a global variable.
+This allows us to save it for later use in the module exit, where we remove this directory and all of its contents to clean up after ourselves.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">debugfs_create_file</span></code> function specifies the name and permissions for the new file.
+<code class="docutils literal notranslate"><span class="pre">S_IRUSR</span> <span class="pre">|</span> <span class="pre">S_IWUSR</span></code> (or <code class="docutils literal notranslate"><span class="pre">0600</span></code>) makes the file readable and writable for its owner.
+The last argument is especially important: it specifies which functions are invoked when the file is read or written.
+This is represented by an instance of the <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file_operations</span></code> type.
+Such an instance is declared immediately above the <code class="docutils literal notranslate"><span class="pre">caesar_init</span></code> function.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">file_operations_caesar_struct</span></code> has two of its fields initialized.
+<code class="docutils literal notranslate"><span class="pre">read</span></code> identifies which function is called when the file is read (here, <code class="docutils literal notranslate"><span class="pre">read_caesar</span></code>) and which function is called when the file is written (here, <code class="docutils literal notranslate"><span class="pre">write_caesar</span></code>).
+A <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file_operations</span></code> is used often in the Linux kernel codebase and has several other fields to specify logic for other file operations.
+Here, we have a minimal file definition that only supports basic reading and writing.</p>
+</section>
+<section id="writing-plaintext">
+<h3>Writing Plaintext<a class="headerlink" href="#writing-plaintext" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">write_caesar</span></code> function is invoked whenever the <code class="docutils literal notranslate"><span class="pre">encrypt</span></code> debugfs file is written to, thanks to our setup during module initialization.
+Our goal is to take a body of text provided by the user, encrypt it using a Caesar cipher, and then preserve this encrypted text for future reads against the file.</p>
+<p>A few variable declarations occur at the beginning of the function.
+This is in accordance with the expected style for Linux kernel code.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">ppos</span></code> argument can be used to specify an offset for a file read or file write.
+In our case, that doesn’t apply as our file holds just one item of information and is not seekable in the usual sense.
+Therefore, we first verify that <code class="docutils literal notranslate"><span class="pre">ppos</span></code> is <code class="docutils literal notranslate"><span class="pre">0</span></code> and return an error if it is not.
+In a more traditional file, one would need to account for the offset in determining where to read or write bytes within the file’s overall contents.</p>
+<p>Our module can’t operate directly on user memory.
+If it did, it could have problems if, for example, the user program exited while the kernel was still using its memory, or if the user program overwrote the memory.</p>
+<p>We immediately know that the <code class="docutils literal notranslate"><span class="pre">buf</span></code> parameter points to user memory because it has a <code class="docutils literal notranslate"><span class="pre">__user</span></code> tag attached to it.
+Therefore, we need to allocate memory within the kernel to hold a copy of the user’s original data.
+This will also be convenient for our use case because we can then iterate through this in-kernel buffer to perform our encryption and we can save a pointer to this buffer to access for any later read operations.</p>
+<p>We use the <code class="docutils literal notranslate"><span class="pre">kzalloc</span></code> function to allocate kernel memory.
+It is similar to the <code class="docutils literal notranslate"><span class="pre">malloc</span></code> function you may be used to from userspace C programming.
+The <code class="docutils literal notranslate"><span class="pre">z</span></code> in the function’s name indicates that the allocated chunk of memory will be zeroed out for us.
+This is a common practice in kernel coding as it addresses some security concerns.
+There are several different flags one can specify as the second argument to <code class="docutils literal notranslate"><span class="pre">kzalloc</span></code> that are well documented.
+<code class="docutils literal notranslate"><span class="pre">GFP_KERNEL</span></code> just says that we need some general-purpose memory without any special considerations.</p>
+<p>Error handling is important in kernel code.
+The <code class="docutils literal notranslate"><span class="pre">caesar</span></code> module uses the <code class="docutils literal notranslate"><span class="pre">IS_ERR</span></code> macro on the pointer returned from <code class="docutils literal notranslate"><span class="pre">kzalloc</span></code> to check for an error.
+Linux kernel functions traditionally return negative integer values to indicate errors.
+The <code class="docutils literal notranslate"><span class="pre">PTR_ERR</span></code> macro converts our pointer to such a negative integer to indicate what went wrong.</p>
+<p><code class="docutils literal notranslate"><span class="pre">copy_from_user</span></code>, as expected, copies bytes from a userspace buffer into our allocated kernel buffer.
+The return value may seem slightly strange to you – it is the number of <cite>uncopied</cite> bytes.
+If an error occurs, then the return value will be nonzero, otherwise it is <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+<p>Our implementation assumes the text to be encrypted is a properly null-terminated string, and this is verified before we proceed.
+Kernel code generally needs to be very careful with anything passed in from the user to ensure it meets the expected assumptions.</p>
+<p>The Caesar encryption comes next.
+It is a bit tedious and isn’t any different in a kernel setting from it would be in userspace.
+It iterates through each character in the user’s original input and does roughly the following:</p>
+<ol class="arabic simple">
+<li><p>Check if the current character is an uppercase or lowercase letter.</p></li>
+<li><p>If so, shift it forwards three positions in the alphabet.
+<code class="docutils literal notranslate"><span class="pre">A</span></code> becomes <code class="docutils literal notranslate"><span class="pre">D</span></code>, <code class="docutils literal notranslate"><span class="pre">B</span></code> becomes <code class="docutils literal notranslate"><span class="pre">E</span></code>, and so on.</p></li>
+<li><p>If the shift goes “past the end” of the alphabet, we wrap around again to the beginning.
+For example, the letter <code class="docutils literal notranslate"><span class="pre">Z</span></code> becomes <code class="docutils literal notranslate"><span class="pre">C</span></code>.</p></li>
+</ol>
+<p>Finally, we need a place to hold a pointer to the modified buffer that will persist between file reads and writes.
+You might also remember from an OS class that directory entries typically correspond to an <cite>inode</cite> in the underlying file system.
+In Linux, the <code class="docutils literal notranslate"><span class="pre">inode</span></code> struct conveniently has a <code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span></code> field named <code class="docutils literal notranslate"><span class="pre">i_private</span></code> that we can use as we see fit.
+Therefore, we’ll just modify this field to point to the buffer holding the ciphertext.
+Note that this uses the global variable <code class="docutils literal notranslate"><span class="pre">stash_ptr</span></code> that was first set up during module initialization.
+If this pointer is not <code class="docutils literal notranslate"><span class="pre">NULL</span></code>, it refers to a previously constructed batch of ciphertext from a previous write, and we use <code class="docutils literal notranslate"><span class="pre">kfree</span></code> to deallocate this (now unnecessary) buffer.</p>
+<p>Note that this function returns the number of bytes “written” to the file, i.e., the length of the ciphertext.
+This corresponds to the expected return value of a <code class="docutils literal notranslate"><span class="pre">write</span></code> system call in Unix.</p>
+</section>
+<section id="reading-ciphertext">
+<h3>Reading Ciphertext<a class="headerlink" href="#reading-ciphertext" title="Link to this heading"></a></h3>
+<p>Most of the heavy lifting happens with a write.
+Reading from the <code class="docutils literal notranslate"><span class="pre">caesar/encrypt</span></code> debugfs file is relatively simple.</p>
+<p>We first verify that <code class="docutils literal notranslate"><span class="pre">ppos</span></code> is <code class="docutils literal notranslate"><span class="pre">0</span></code> as we did for a write.
+Then, we use the <code class="docutils literal notranslate"><span class="pre">strnlen</span></code> function to compute the length of the stored ciphertext.
+Note that this is written to ensure that at most <code class="docutils literal notranslate"><span class="pre">count</span></code> bytes are used.
+The end of the ciphertext is cut off if the user does not ask to read enough total bytes (although, in this case, the result of a read will no longer be a properly null-terminated string).</p>
+<p><code class="docutils literal notranslate"><span class="pre">copy_to_user</span></code> copies bytes from our kernel buffer, accessed via the same inode field as before, to user memory.
+The meaning of its return value are the same as <code class="docutils literal notranslate"><span class="pre">copy_from_user</span></code> – the number of uncopied bytes.
+We check for a copying error and otherwise return the number of bytes copied.
+This corresponds to the expected return value of a <code class="docutils literal notranslate"><span class="pre">read</span></code> system call in Unix.</p>
+</section>
+</section>
+<section id="testing-the-module">
+<h2>Testing the Module<a class="headerlink" href="#testing-the-module" title="Link to this heading"></a></h2>
+<p>Note that you will need to make the following changes to the <code class="docutils literal notranslate"><span class="pre">.config</span></code> file in your Linux repository:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">CONFIG_STAGING</span><span class="o">=</span>y
+<span class="nv">CONFIG_CAESAR</span><span class="o">=</span>y
+</pre></div>
+</div>
+<p>Once you’ve done this, you can recompile the kernel and launch a virtual machine using virtme-ng as before.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compile the kernel.</span>
+myx500@cs-u-maize.cs.umn.edu:~/linux$<span class="w"> </span>vng<span class="w"> </span>--verbose<span class="w"> </span>--build
+
+<span class="c1"># Boot the kernel in a virtual machine.</span>
+myx500@cs-u-maize.cs.umn.edu:~/linux$<span class="w"> </span>vng<span class="w"> </span>--verbose
+</pre></div>
+</div>
+<p>All we really need to do is issue system calls to write and then read from the appropriate file.
+We should be able to read back the encrypted form of what was written immediately before.</p>
+<p>Here’s a rudimentary C program to “encrypt” the text <code class="docutils literal notranslate"><span class="pre">Hello,</span> <span class="pre">World!</span></code>.
+You may want to add some error checking for easier debugging.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;fcntl.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;unistd.h&gt;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Hello, World!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">fd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">open</span><span class="p">(</span><span class="s">&quot;/sys/kernel/debug/caesar/encrypt&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">O_WRONLY</span><span class="p">);</span>
+<span class="w">    </span><span class="n">write</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span><span class="w"> </span><span class="n">message</span><span class="p">,</span><span class="w"> </span><span class="n">strlen</span><span class="p">(</span><span class="n">message</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">    </span><span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">);</span>
+
+<span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="n">buf</span><span class="p">[</span><span class="mi">512</span><span class="p">];</span>
+<span class="w">    </span><span class="n">fd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">open</span><span class="p">(</span><span class="s">&quot;/sys/kernel/debug/caesar/encrypt&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">O_RDONLY</span><span class="p">);</span>
+<span class="w">    </span><span class="n">read</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span><span class="w"> </span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="mi">512</span><span class="p">);</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Ciphertext: %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">buf</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>You can also use the <code class="docutils literal notranslate"><span class="pre">strace</span></code> program to see what syscalls the program is making.
+Because the <code class="docutils literal notranslate"><span class="pre">/sys/kernel/debug</span></code> directory has <code class="docutils literal notranslate"><span class="pre">0700</span></code> permissions, and because we created <code class="docutils literal notranslate"><span class="pre">/sys/kernel/debug/caesar/encrypt</span></code> with <code class="docutils literal notranslate"><span class="pre">0600</span></code> permissions, a normal user cannot open the file.
+We can see how this appears in <code class="docutils literal notranslate"><span class="pre">strace</span></code>.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compile the program from above. You probably need to create a file for</span>
+<span class="c1"># it; we&#39;re assuming it&#39;s named `main.c`.</span>
+myx500@virtme-ng:~$<span class="w"> </span>gcc<span class="w"> </span>main.c<span class="w"> </span>-o<span class="w"> </span>main
+
+<span class="c1"># Run the program with normal user permissions.</span>
+myx500@virtme-ng:~$<span class="w"> </span>./main
+Ciphertext:
+
+<span class="c1"># Run the program under strace, to see the system calls it performs.</span>
+myx500@virtme-ng:~$<span class="w"> </span>strace<span class="w"> </span>./main
+<span class="o">[</span>...<span class="o">]</span>
+openat<span class="o">(</span>AT_FDCWD,<span class="w"> </span><span class="s2">&quot;/sys/kernel/debug/caesar/encrypt&quot;</span>,<span class="w"> </span>O_WRONLY<span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>-1<span class="w"> </span>EACCES<span class="w"> </span><span class="o">(</span>Permission<span class="w"> </span>denied<span class="o">)</span>
+write<span class="o">(</span>-1,<span class="w"> </span><span class="s2">&quot;Hello, World!\n\0&quot;</span>,<span class="w"> </span><span class="m">15</span><span class="o">)</span><span class="w">      </span><span class="o">=</span><span class="w"> </span>-1<span class="w"> </span>EBADF<span class="w"> </span><span class="o">(</span>Bad<span class="w"> </span>file<span class="w"> </span>descriptor<span class="o">)</span>
+close<span class="o">(</span>-1<span class="o">)</span><span class="w">                               </span><span class="o">=</span><span class="w"> </span>-1<span class="w"> </span>EBADF<span class="w"> </span><span class="o">(</span>Bad<span class="w"> </span>file<span class="w"> </span>descriptor<span class="o">)</span>
+openat<span class="o">(</span>AT_FDCWD,<span class="w"> </span><span class="s2">&quot;/sys/kernel/debug/caesar/encrypt&quot;</span>,<span class="w"> </span>O_RDONLY<span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>-1<span class="w"> </span>EACCES<span class="w"> </span><span class="o">(</span>Permission<span class="w"> </span>denied<span class="o">)</span>
+read<span class="o">(</span>-1,<span class="w"> </span>0x7fffbfc58bb0,<span class="w"> </span><span class="m">512</span><span class="o">)</span><span class="w">           </span><span class="o">=</span><span class="w"> </span>-1<span class="w"> </span>EBADF<span class="w"> </span><span class="o">(</span>Bad<span class="w"> </span>file<span class="w"> </span>descriptor<span class="o">)</span>
+<span class="o">[</span>...<span class="o">]</span>
+
+<span class="c1"># Run the program with sudo and strace, to get root permissions, and see the syscalls it made.</span>
+myx500@virtme-ng:~$<span class="w"> </span>sudo<span class="w"> </span>strace<span class="w"> </span>./main
+<span class="o">[</span>...<span class="o">]</span>
+openat<span class="o">(</span>AT_FDCWD,<span class="w"> </span><span class="s2">&quot;/sys/kernel/debug/caesar/encrypt&quot;</span>,<span class="w"> </span>O_WRONLY<span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
+write<span class="o">(</span><span class="m">3</span>,<span class="w"> </span><span class="s2">&quot;Hello, World!\n\0&quot;</span>,<span class="w"> </span><span class="m">15</span><span class="o">)</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="m">15</span>
+close<span class="o">(</span><span class="m">3</span><span class="o">)</span><span class="w">                                </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+openat<span class="o">(</span>AT_FDCWD,<span class="w"> </span><span class="s2">&quot;/sys/kernel/debug/caesar/encrypt&quot;</span>,<span class="w"> </span>O_RDONLY<span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
+read<span class="o">(</span><span class="m">3</span>,<span class="w"> </span><span class="s2">&quot;Khoor, Zruog!\n\0&quot;</span>,<span class="w"> </span><span class="m">512</span><span class="o">)</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="m">15</span>
+<span class="o">[</span>...<span class="o">]</span>
+</pre></div>
+</div>
+</section>
+<section id="what-s-next">
+<h2>What’s Next?<a class="headerlink" href="#what-s-next" title="Link to this heading"></a></h2>
+<p>There are lots of things you might try to do from here.
+Here are a couple of ideas:</p>
+<ul class="simple">
+<li><p>Write a kernel module to carry out a more sophisticated encryption scheme.
+A Caesar cipher is about as simple (and unsecure) as you can get.</p></li>
+<li><p>Extend this module to perform decryption as well as encryption.
+You could create a second debugfs file at <code class="docutils literal notranslate"><span class="pre">caesar/decrypt</span></code> that performs the inverse of what we’ve seen here for reading and writing.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="building-and-booting.html" class="btn btn-neutral float-left" title="Building and Booting a Linux kernel on Maize" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="vm-kernel-install.html" class="btn btn-neutral float-right" title="Kernel Install in VM" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
